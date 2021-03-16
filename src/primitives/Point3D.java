@@ -1,5 +1,7 @@
 package primitives;
 
+import java.util.Objects;
+
 public class Point3D {
 
     Coordinate x;
@@ -39,5 +41,18 @@ public class Point3D {
                 (this.y.coord-vertex.y.coord)*(this.y.coord-vertex.y.coord)+
                 (this.z.coord-vertex.z.coord)*(this.z.coord-vertex.z.coord);
     }
+
+    public double distance(Point3D vertex){
+        return Math.sqrt(distanceSquared(vertex));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Point3D)) return false;
+        Point3D point3D = (Point3D) o;
+        return x.equals(point3D.x) && y.equals(point3D.y) && z.equals(point3D.z);
+    }
+
 
 }

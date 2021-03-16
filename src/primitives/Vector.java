@@ -27,4 +27,50 @@ public class Vector {
     public Point3D getHead() {
         return head;
     }
+
+    public Vector subtract(Vector other){
+        return head.subtract(other.getHead());
+
+    }
+
+    public Vector add(Vector other){
+        return new Vector(head.add(other));
+
+    }
+
+    public Vector scale(double scalar){
+        return new Vector(this.head.x.coord*scalar,this.head.y.coord*scalar,this.head.z.coord*scalar);
+    }
+
+    public double dotProduct(Vector other){
+        return this.head.x.coord*other.getHead().x.coord
+                +this.head.y.coord*other.getHead().y.coord
+                +this.head.z.coord*other.getHead().z.coord;
+    }
+    public Vector crossProduct(Vector other){
+        return new Vector(this.head.y.coord*other.head.z.coord-this.head.z.coord*other.head.y.coord,
+                            this.head.z.coord*other.head.x.coord-this.head.x.coord*other.head.z.coord,
+                            this.head.x.coord*other.head.y.coord-this.head.y.coord*other.head.x.coord
+                        );
+    }
+
+    public double lengthSquared(){
+        return this.head.distanceSquared(Point3D.ZERO);
+    }
+
+    public double length(){
+        return this.head.distance(Point3D.ZERO);
+    }
+
+    public Vector normalize(){
+        double vectorLength=this.length();
+        this.head=new Point3D(this.head.x.coord/vectorLength,
+                                this.head.y.coord/vectorLength,
+                                this.head.z.coord/vectorLength);
+        return this;
+    }
+
+    public Vector normalized(){
+        return new Vector(getHead()).normalize();
+    }
 }
