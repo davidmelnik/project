@@ -1,5 +1,7 @@
 package primitives;
 
+import java.util.Objects;
+
 public class Vector {
     private Point3D head;
 
@@ -73,4 +75,14 @@ public class Vector {
     public Vector normalized(){
         return new Vector(getHead()).normalize();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vector)) return false;
+        Vector vector = (Vector) o;
+        return head.equals(vector.head);
+    }
+
+
 }
