@@ -8,6 +8,11 @@ public class Sphere implements Geometry{
     private Point3D center;
     private double radius;
 
+    /**
+     * constructs a a sphere
+     * @param center center point
+     * @param radius sphere's radius
+     */
     public Sphere(Point3D center, double radius) {
         this.center = center;
         this.radius = radius;
@@ -28,6 +33,7 @@ public class Sphere implements Geometry{
                 ", radius=" + radius +
                 '}';
     }
+
 
     @Override
     public Vector getNormal(Point3D point) {

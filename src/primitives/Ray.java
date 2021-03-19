@@ -6,6 +6,12 @@ public class Ray {
     private Point3D p0;
     private Vector dir;
 
+    /**
+     * constructs a normalized ray
+     * normalizes the given vector
+     * @param p0 starting point
+     * @param dir direction vector
+     */
     public Ray(Point3D p0, Vector dir) {
         this.p0 = p0;
         this.dir = dir.normalized();
