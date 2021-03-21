@@ -141,5 +141,10 @@ public class Vector {
         return head.equals(vector.head);
     }
 
-
+    @Override
+    public String toString() {
+        return "Vector{" +
+                "head=" + head +
+                '}';
+    }
 }

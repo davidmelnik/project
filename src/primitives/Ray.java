@@ -25,5 +25,11 @@ public class Ray {
         return p0.equals(ray.p0) && dir.equals(ray.dir);
     }
 
-
+    @Override
+    public String toString() {
+        return "Ray{" +
+                "p0=" + p0 +
+                ", dir=" + dir +
+                '}';
+    }
 }
