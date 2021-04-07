@@ -133,6 +133,8 @@ public class Vector {
         return new Vector(getHead()).normalize();
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
