@@ -1,4 +1,4 @@
-package unittests;
+package unittests.geometries;
 
 import org.junit.After;
 import org.junit.Before;
