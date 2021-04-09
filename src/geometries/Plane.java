@@ -19,14 +19,21 @@ public class Plane implements Geometry{
 
     /**
      * constructs a plane
-     * not implemented yet !!!
      * @param q0 first point
      * @param q1 second point
      * @param q2 third point
      */
     public Plane(Point3D q0, Point3D q1, Point3D q2) {
-        this.q0 = q0;
-        this.normal = null;
+        if(q0.equals(q1) || q0.equals(q2)|| q1.equals(q2))
+            throw new IllegalArgumentException("all 3 point in the plane must be different");
+        this.q0= q0;
+        try {
+            this.normal = q0.subtract(q1).crossProduct(q0.subtract(q2));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("all 3 points are on same line");
+        }
+
+
     }
 
 
