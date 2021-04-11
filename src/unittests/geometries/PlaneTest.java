@@ -29,14 +29,21 @@ public class PlaneTest {
      */
     @Test
     public void Plane() {
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: There is a simple single test here
+        // Because it is a flat surface, the normal can be to opposite vectors
         Plane pl0= new Plane(new Point3D(1,1,0),new Point3D(0,1,0),new Point3D(1,0,0));
         assertTrue("Bad normal to plane", (pl0.getNormal(new Point3D(0,0,0)).equals(new Vector(0,0,1))||
                 pl0.getNormal(new Point3D(0,0,0)).equals( new Vector(0,0,-1))));
+
+        // =============== Boundary Values Tests ==================
+        // TC10: 2 equal points
         try {
             Plane pl = new Plane(new Point3D(0,0,1),new Point3D(0,0,1),new Point3D(0,0,2));
             fail("although 2 points are equal it didn't through an exception");
         } catch (Exception e) {}
 
+        // TC11: V3 points are in the same line
         try {
             Plane pl = new Plane(new Point3D(0,0,0),new Point3D(0,0,1),new Point3D(0,0,2));
             fail("although all 3 points are in the same line it didn't through an exception");

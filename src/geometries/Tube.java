@@ -40,6 +40,6 @@ public class Tube implements Geometry{
             pointO = getAxisRay().getP0();
         else
             pointO = getAxisRay().getP0().add(getAxisRay().getDir().scale(t));
-        return point.subtract(pointO);
+        return point.subtract(pointO).normalized();
     }
 }

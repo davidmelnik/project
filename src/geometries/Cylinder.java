@@ -3,6 +3,7 @@ package geometries;
 import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
+import primitives.Util;
 
 public class Cylinder extends Tube{
     private double height;
@@ -20,7 +21,26 @@ public class Cylinder extends Tube{
 
     @Override
     public Vector getNormal(Point3D point) {
-        return null;
+        // tf the point is on the center of the ray
+        if (point.equals(this.axisRay.getP0()))
+            return this.axisRay.getDir().scale(-1).normalized();
+
+
+        double rayLength= getAxisRay().getDir().dotProduct(point.subtract(getAxisRay().getP0()));
+
+        //if the point is on the bottom of the cylinder
+        if (rayLength==0)
+            return this.axisRay.getDir().scale(-1).normalized();
+
+        //if the point is on the top of the cylinder
+        if (Util.isZero(rayLength-height))
+           return this.axisRay.getDir().normalized();
+
+        //if the point is on the tube
+        Point3D point0 = getAxisRay().getP0().add(getAxisRay().getDir().scale(rayLength));
+        return point.subtract(point0).normalized();
+
+
     }
 
     public double getHeight() {
