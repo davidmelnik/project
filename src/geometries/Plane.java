@@ -28,7 +28,7 @@ public class Plane implements Geometry{
             throw new IllegalArgumentException("all 3 point in the plane must be different");
         this.q0= q0;
         try {
-            this.normal = q0.subtract(q1).crossProduct(q0.subtract(q2));
+            this.normal = q0.subtract(q1).crossProduct(q0.subtract(q2)).normalized();
         } catch (Exception e) {
             throw new IllegalArgumentException("all 3 points are on same line");
         }

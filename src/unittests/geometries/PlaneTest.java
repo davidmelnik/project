@@ -20,8 +20,8 @@ public class PlaneTest {
         // TC01: There is a simple single test here
         // Because it is a flat surface, the normal can be to opposite vectors
         Plane plane= new Plane(new Point3D(1,1,0),new Point3D(0,1,0),new Point3D(1,0,0));
-        assertTrue("Bad normal to plane", (plane.getNormal()== new Vector(0,0,1)||
-                plane.getNormal()== new Vector(0,0,-1)));
+        assertTrue("Bad normal to plane", (plane.getNormal().equals(new Vector(0,0,1))||
+                plane.getNormal().equals(new Vector(0,0,-1))));
 
     }
     /**
