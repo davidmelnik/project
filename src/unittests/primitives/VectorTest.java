@@ -119,7 +119,7 @@ public class VectorTest {
 
 
        try {
-         Vector v5=  v1.crossProduct(v3);
+        v1.crossProduct(v3);
            fail("crossProduct() for parallel vectors does not throw an exception");
        } catch (Exception e) {}
      }
