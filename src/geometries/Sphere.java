@@ -46,6 +46,12 @@ public class Sphere implements Geometry{
 
     @Override
     public List<Point3D> findIntersections(Ray ray) {
-        return null;
+        Vector u= this.center.subtract(ray.getP0());
+        double t_m=ray.getDir().dotProduct(u);
+        double  d=Math.sqrt(u.lengthSquared()-t_m*t_m);
+        if(d>=this.radius)
+            return null;//
+        double t_h=Math.sqrt(this.radius*this.radius -d*d);
+
     }
 }

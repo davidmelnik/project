@@ -77,6 +77,18 @@ public class Point3D {
         return Math.sqrt(distanceSquared(vertex));
     }
 
+    public double getX() {
+        return x.coord;
+    }
+
+    public double getY() {
+        return y.coord;
+    }
+
+    public double getZ() {
+        return z.coord;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
