@@ -4,6 +4,7 @@ import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Plane implements Geometry{
@@ -63,6 +64,18 @@ public class Plane implements Geometry{
 
     @Override
     public List<Point3D> findIntersections(Ray ray) {
-        return null;
+        double denominator,numerator;
+        if(ray.getP0().equals(this.q0))// if the head is on the plane there aren't any intersections, or the ray is included in the plane
+            return null;
+        numerator=this.getNormal().dotProduct(this.q0.subtract(ray.getP0()));
+        denominator= ray.getDir().dotProduct(this.normal);
+        if(denominator ==0)
+            return null;// ray inside the plane
+        double t= numerator/denominator;
+        if(t<=0)
+            return null;// the ray start after the plane
+        List<Point3D> lst = new ArrayList<>();
+        lst.add(ray.getP0().add(ray.getDir().scale(t)));
+        return lst;
     }
 }

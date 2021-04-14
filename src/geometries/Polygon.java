@@ -88,6 +88,25 @@ public class Polygon implements Geometry {
 
 	@Override
 	public List<Point3D> findIntersections(Ray ray) {
-		return null;
+		List<Point3D> list= this.plane.findIntersections(ray);
+		if(list == null)
+			return null;
+		Vector v_prev= this.vertices.get(0).subtract(ray.getP0());
+		Vector v_next= this.vertices.get(1).subtract(ray.getP0());
+		double v_dot_N =ray.getDir().dotProduct(v_prev.crossProduct(v_next).normalized());
+		if(Util.isZero(v_dot_N))
+			return null;// the point On edge
+		boolean positive = v_dot_N>0;
+		for(int i=2; i<this.vertices.size();i++){
+			v_prev = v_next;
+			v_next= this.vertices.get(i).subtract(ray.getP0());
+			v_dot_N =ray.getDir().dotProduct(v_prev.crossProduct(v_next).normalized());
+			if(Util.isZero(v_dot_N))
+				return null;// the point On edge
+			boolean now_positive = v_dot_N>0;
+			if(positive !=now_positive) //if Ni sign is differnt from Ni-1 the point dont on poligon
+				return  null;
+		}
+		return  list;
 	}
 }
