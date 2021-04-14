@@ -49,19 +49,18 @@ public class TriangleTest {
 
         // =============== Boundary Values Tests ==================
         // **** Group: the ray begins "before" the plane
-        // TC10: Ray's Outside against vertex triangle (0 points)
+        // TC10: Ray's On edge (0 points)
         result = triangle.findIntersections(new Ray(new Point3D(0.5, 0,1),
                 new Vector(0, 0, -1)));
-        assertEquals("Wrong number of points1", null, result);
-
+        assertEquals("Wrong number of points, Ray's On edge", null, result);
+        // TC11: Ray's In vertex (0 points)
         result = triangle.findIntersections(new Ray(new Point3D(1, 0,1),
                 new Vector(0, 0, -1)));
-        assertEquals("Wrong number of points2", null, result);
-
+        assertEquals("Wrong number of points, Ray's In vertex", null, result);
+        // TC12: Ray's  On edge's continuation (0 points)
         result = triangle.findIntersections(new Ray(new Point3D(-8, 0,1),
                 new Vector(0, 0, -1)));
-        assertEquals("Wrong number of points3", null, result);
-
+        assertEquals("Wrong number of points, Ray's  On edge's continuation", null, result);
 
     }
 
