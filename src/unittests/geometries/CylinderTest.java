@@ -24,7 +24,7 @@ public class CylinderTest {
     public void getNormal() {
         Cylinder cyl= new Cylinder(new Ray(new Point3D(0,0,0),new Vector(0,0,1)),2,10);
 
-        // =============== Boundary Values Tests ==================
+        // =============== Equivalence Partitions Tests ==================
         // TC01: correct normal at bottom base
         assertEquals("wrong normal at bottom base",new Vector(0,0,-1),cyl.getNormal(new Point3D(1.5,-1.5,0)));
 

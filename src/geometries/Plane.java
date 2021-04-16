@@ -75,7 +75,7 @@ public class Plane implements Geometry{
         if(t<=0)
             return null;// the ray start after the plane
         List<Point3D> lst = new ArrayList<>();
-        lst.add(ray.getP0().add(ray.getDir().scale(t)));
+        lst.add(ray.getPoint(t));
         return lst;
     }
 }
