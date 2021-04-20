@@ -1,6 +1,7 @@
 package elements;
 
 import primitives.Point3D;
+import primitives.Ray;
 import primitives.Util;
 import primitives.Vector;
 
@@ -17,7 +18,7 @@ public class Camera {
     private double distance;
 
 
-    public Camera(Point3D p0, Vector vUp, Vector vTo) {
+    public Camera(Point3D p0, Vector vTo, Vector vUp) {
         this.p0 = p0;
         this.vUp = vUp.normalized();
         this.vTo = vTo.normalized();
@@ -35,6 +36,8 @@ public class Camera {
     }
 
     public Camera setDistance(double distance){
+        if(distance<=0)
+            throw  new IllegalArgumentException("distance must be positive");
         this.distance=distance;
 
         return this;
@@ -72,6 +75,21 @@ public class Camera {
 
     public Ray constructRayThroughPixel(int nX, int nY, int j, int i){
 
-    };
+        Point3D Pc =this.p0.add(this.vTo.scale(this.distance));
+        double Ry =this.getHeight()/((double) nY );
+        double Rx =this.getWidth()/((double) nX );
+        double  Yi=-(i-(nY-1)/2d)*Ry;
+        double Xj=(j-(nX-1)/2d)*Rx;
+        Point3D Pi_j;
+        if(Xj == 0 && Yi==0 )
+            Pi_j = Pc;
+        else if(Xj ==0)
+            Pi_j = Pc.add(vUp.scale(Yi));
+        else if(Yi ==0)
+            Pi_j = Pc.add(vRight.scale(Xj));
+        else
+            Pi_j = Pc.add(vRight.scale(Xj).add(vUp.scale(Yi)));
+        return new Ray(this.p0, Pi_j.subtract(this.p0));
+    }
 
 }
