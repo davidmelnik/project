@@ -19,6 +19,7 @@ public class IntegrationTestsCameraIntersection {
     /**
      * Test method for
      * {@link elements.Camera#constructRayThroughPixel(int, int, int, int)}.
+     * goes over all the rows and columns and returns the sum of the intersection
      */
     private int countIntersection(Camera camera, int nX, int nY, Geometry geometry){
         int counter=0;
@@ -34,11 +35,12 @@ public class IntegrationTestsCameraIntersection {
     }
 
     @Test
-    public void testIntegretionFindIntersections() {
+    public void testIntegrationFindIntersections() {
         Camera cameraCenter = new Camera(Point3D.ZERO,new Vector(0,0,-1),
                 new Vector(0,1,0)).setDistance(1).setViewPlaneSize(3,3);
         Camera cameraOffCenter = new Camera(new Point3D(0,0,0.5),new Vector(0,0,-1),
                 new Vector(0,1,0)).setDistance(1).setViewPlaneSize(3,3);
+
         // **** Group: sphere intersection
         // TC01:sphere after view plane(2 points)
         assertEquals("Wrong number points - sphere after view plane(2 points)",

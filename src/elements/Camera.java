@@ -7,14 +7,27 @@ import primitives.Vector;
 
 public class Camera {
 
+    /**
+     * cameras location
+     */
     private Point3D p0;
+
+    /**
+     * 3 orthogonal vectors which represent the cameras direction
+     */
     private Vector vUp;
     private Vector vTo;
     private Vector vRight;
 
+    /**
+     * view plane size
+     */
     private double width;
     private double height;
 
+    /**
+     * distance of the camera from the view plan
+     */
     private double distance;
 
 
@@ -73,22 +86,37 @@ public class Camera {
     }
 
 
+    /**
+     * constructs a ray that passes through a specific pixel
+     * @param nX number of columns
+     * @param nY number of rows
+     * @param j pixel row
+     * @param i pixel column
+     * @return
+     */
     public Ray constructRayThroughPixel(int nX, int nY, int j, int i){
 
+        //VP center
         Point3D Pc =this.p0.add(this.vTo.scale(this.distance));
+
+        //pixel dimensions
         double Ry =this.getHeight()/((double) nY );
         double Rx =this.getWidth()/((double) nX );
+
+        //distance from the pixel to the center of the VP
         double  Yi=-(i-(nY-1)/2d)*Ry;
         double Xj=(j-(nX-1)/2d)*Rx;
-        Point3D Pi_j;
-        if(Xj == 0 && Yi==0 )
-            Pi_j = Pc;
-        else if(Xj ==0)
-            Pi_j = Pc.add(vUp.scale(Yi));
-        else if(Yi ==0)
-            Pi_j = Pc.add(vRight.scale(Xj));
-        else
-            Pi_j = Pc.add(vRight.scale(Xj).add(vUp.scale(Yi)));
+
+
+        /**
+         * cannot construct a vector zero, so in such a case the point doesn't change
+         */
+        Point3D Pi_j = Pc;
+         if(Xj !=0)
+            Pi_j = Pi_j.add(vRight.scale(Xj));
+         if(Yi !=0)
+            Pi_j = Pi_j.add(vUp.scale(Yi));
+
         return new Ray(this.p0, Pi_j.subtract(this.p0));
     }
 

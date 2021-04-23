@@ -9,6 +9,8 @@ import org.junit.Test;
 import geometries.*;
 import primitives.*;
 
+import java.util.List;
+
 /**
  * Testing Polygons
  * 
@@ -92,4 +94,43 @@ public class PolygonTests {
         assertEquals("Bad normal to trinagle", new Vector(sqrt3, sqrt3, sqrt3), pl.getNormal(new Point3D(0, 0, 1)));
     }
 
+    /**
+     * Test method for {@link geometries.Polygon#findIntersections(Ray)}.
+     */
+    @Test
+    public void testFindIntersections() {
+        Polygon polygon  = new Polygon(new Point3D(-1,0,0),new Point3D(0,1,0),new Point3D(1,1,0),new Point3D(1,0,0));
+
+        // ============ Equivalence Partitions Tests ==============
+
+        // TC01: Ray's Inside polygon (1 points)
+        List<Point3D> result = polygon.findIntersections(new Ray(new Point3D(0,0.5,1),
+                new Vector(0, 0, -1)));
+        assertEquals("Wrong number of points", 1, result.size());
+        assertEquals("Ray crosses polygon", List.of(new Point3D(0,0.5,0)), result);
+        // TC02: Ray's Outside against edge polygon (0 points)
+        result = polygon.findIntersections(new Ray(new Point3D(-1, 1,1),
+                new Vector(0, 0, -1)));
+        assertEquals("Wrong number of points", null, result);
+        // TC03: Ray's Outside against vertex polygon (0 points)
+        result = polygon.findIntersections(new Ray(new Point3D(-8, -1,1),
+                new Vector(0, 0, -1)));
+        assertEquals("Wrong number of points", null, result);
+
+        // =============== Boundary Values Tests ==================
+        // **** Group: the ray begins "before" the plane
+        // TC10: Ray's On edge (0 points)
+        result = polygon.findIntersections(new Ray(new Point3D(0.5, 0,1),
+                new Vector(0, 0, -1)));
+        assertEquals("Wrong number of points, Ray's On edge", null, result);
+        // TC11: Ray's In vertex (0 points)
+        result = polygon.findIntersections(new Ray(new Point3D(1, 0,1),
+                new Vector(0, 0, -1)));
+        assertEquals("Wrong number of points, Ray's In vertex", null, result);
+        // TC12: Ray's  On edge's continuation (0 points)
+        result = polygon.findIntersections(new Ray(new Point3D(-8, 0,1),
+                new Vector(0, 0, -1)));
+        assertEquals("Wrong number of points, Ray's  On edge's continuation", null, result);
+
+    }
 }
