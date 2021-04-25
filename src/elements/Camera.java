@@ -5,6 +5,8 @@ import primitives.Ray;
 import primitives.Util;
 import primitives.Vector;
 
+import static primitives.Util.isZero;
+
 public class Camera {
 
     /**
@@ -35,7 +37,7 @@ public class Camera {
         this.p0 = p0;
         this.vUp = vUp.normalized();
         this.vTo = vTo.normalized();
-        if (!Util.isZero(vUp.dotProduct(vTo)))
+        if (!isZero(vUp.dotProduct(vTo)))
             throw new IllegalArgumentException ("vectors aren't vertical");
 
         this.vRight=vTo.crossProduct(vUp).normalized();
@@ -112,9 +114,9 @@ public class Camera {
          * cannot construct a vector zero, so in such a case the point doesn't change
          */
         Point3D Pi_j = Pc;
-         if(Xj !=0)
+         if(!isZero(Xj))
             Pi_j = Pi_j.add(vRight.scale(Xj));
-         if(Yi !=0)
+         if(!isZero(Yi))
             Pi_j = Pi_j.add(vUp.scale(Yi));
 
         return new Ray(this.p0, Pi_j.subtract(this.p0));
