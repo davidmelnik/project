@@ -1,5 +1,6 @@
 package primitives;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Ray {
@@ -15,6 +16,28 @@ public class Ray {
     public Ray(Point3D p0, Vector dir) {
         this.p0 = p0;
         this.dir = dir.normalized();
+    }
+
+    /**
+     *
+     * @param list
+     * @return the closet point to the head of ray
+     * if list empty= return null
+     */
+    public Point3D findClosestPoint(List<Point3D> list){
+        if(list ==null || list.isEmpty())
+            return null;
+        double min_distance = list.get(0).distanceSquared(this.p0);
+        Point3D close_point = list.get(0);
+
+        //every time I take the min point and  min distance
+        for (Point3D item: list) {
+            if(item.distanceSquared(this.p0) <min_distance){
+                min_distance=item.distanceSquared(this.p0);
+                close_point =item;
+            }
+        }
+        return close_point;
     }
 
     @Override
