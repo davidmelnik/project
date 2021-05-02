@@ -1,5 +1,8 @@
 package primitives;
 
+import geometries.Intersectable;
+import geometries.Intersectable.GeoPoint;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +37,28 @@ public class Ray {
         for (Point3D item: list) {
             if(item.distanceSquared(this.p0) <min_distance){
                 min_distance=item.distanceSquared(this.p0);
+                close_point =item;
+            }
+        }
+        return close_point;
+    }
+
+    /**
+     *
+     * @param list
+     * @return the closet point to the head of ray
+     * if list empty= return null
+     */
+    public GeoPoint getClosestGeoPoint (List<Intersectable.GeoPoint> list){
+        if(list ==null || list.isEmpty())
+            return null;
+        double min_distance = list.get(0).point.distanceSquared(this.p0);
+        GeoPoint close_point = list.get(0);
+
+        //every time I take the min point and  min distance
+        for (GeoPoint item: list) {
+            if(item.point.distanceSquared(this.p0) <min_distance){
+                min_distance=item.point.distanceSquared(this.p0);
                 close_point =item;
             }
         }
