@@ -87,6 +87,7 @@ public class Polygon extends Geometry {
 	}
 
 	@Override
+	//TODO replace plane GeoPoint with Polygon GeoPoint
 	public List<GeoPoint> findGeoIntersections(Ray ray) {
 		List<GeoPoint> list= this.plane.findGeoIntersections(ray);
 		if(list == null)
@@ -106,8 +107,13 @@ public class Polygon extends Geometry {
 			boolean now_positive = v_dot_N>0;
 			if(positive !=now_positive) //if Ni sign is differnt from Ni-1 the point dont on poligon
 				return  null;
+
 		}
-		return  list;
+
+
+
+
+			return  list;
 	}
 
 	@Override

@@ -52,10 +52,11 @@ public class RenderTests {
 		Scene scene = new Scene("Test scene")//
 				.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.2)); //
 
-		scene.geometries.add(new Sphere(new Point3D(0, 0, -100),50), //
+		scene.geometries.add(new Sphere(new Point3D(0, 0, -100),50).setEmission(new Color(java.awt.Color.BLUE)), //
 				new Triangle(new Point3D(-100, 0, -100), new Point3D(0, 100, -100), new Point3D(-100, 100, -100)) // up left
 						.setEmission(new Color(java.awt.Color.GREEN)),
-				new Triangle(new Point3D(100, 0, -100), new Point3D(0, 100, -100), new Point3D(100, 100, -100)), // up right
+				new Triangle(new Point3D(100, 0, -100), new Point3D(0, 100, -100), new Point3D(100, 100, -100))
+						.setEmission(new Color(java.awt.Color.YELLOW))				, // up right
 				new Triangle(new Point3D(-100, 0, -100), new Point3D(0, -100, -100), new Point3D(-100, -100, -100)) // down left
 						.setEmission(new Color(java.awt.Color.RED)),
 				new Triangle(new Point3D(100, 0, -100), new Point3D(0, -100, -100), new Point3D(100, -100, -100)) // down right
@@ -66,7 +67,7 @@ public class RenderTests {
 				.setImageWriter(imageWriter) //
 				.setScene(scene) //
 				.setCamera(camera) //
-				.setRayTracer(new BasicRayTracer(scene));
+				.setRayTracer(new RayTracerBasic(scene));
 
 		render.renderImage();
 		render.printGrid(100, new Color(java.awt.Color.WHITE));

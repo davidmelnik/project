@@ -15,7 +15,7 @@ public abstract class Geometry implements Intersectable {
     * @param emmission
     * @return Geometry
     */
-   public Geometry setEmmission(Color emmission) {
+   public Geometry setEmission(Color emmission) {
       this.emmission = emmission;
 
       return this;
