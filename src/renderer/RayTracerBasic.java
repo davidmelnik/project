@@ -16,10 +16,17 @@ public class RayTracerBasic extends RayTracerBase{
         return calcColor(ray.findClosestPoint(scene.geometries.findIntersections(ray)));
     }
 
+    /**
+     * calculate the color of a point
+     * @param point
+     * @return point's color
+     */
     private Color calcColor(Point3D point){
+        //no intersection
         if(point == null)
             return scene.background;
-        return new Color(java.awt.Color.BLUE);
+
+        return scene.ambientLight.getIntensity();
     }
 
 
