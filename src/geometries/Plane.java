@@ -79,6 +79,7 @@ public class Plane extends Geometry {
         return lst;
     }
 
+
     @Override
     public List<Point3D> findIntersections(Ray ray) {
         double denominator,numerator;

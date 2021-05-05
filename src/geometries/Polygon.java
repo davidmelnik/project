@@ -109,11 +109,8 @@ public class Polygon extends Geometry {
 				return  null;
 
 		}
-
-
-
-
-			return  list;
+		list.get(0).geometry=this;
+		return  list;
 	}
 
 	@Override

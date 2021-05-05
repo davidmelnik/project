@@ -22,7 +22,7 @@ public class Render
          */
         for(int i=0; i<imageWriter.getNx();i++){
             for(int j=0; j<imageWriter.getNy();j++){
-                imageWriter.writePixel(i,j,rayTracerBase.traceRay
+                imageWriter.writePixel(j,i,rayTracerBase.traceRay
                         (camera.constructRayThroughPixel(imageWriter.getNx(), imageWriter.getNy(), j,i)));
             }
         }
