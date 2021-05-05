@@ -16,6 +16,10 @@ public class Render
     public void renderImage(){
         if(this.scene==null || this.camera==null || this.imageWriter==null || this.rayTracerBase==null)
             throw new MissingResourceException("missing builder","Render","02");
+
+        /**
+         * traces all the rays for each pixel to create an image
+         */
         for(int i=0; i<imageWriter.getNx();i++){
             for(int j=0; j<imageWriter.getNy();j++){
                 imageWriter.writePixel(i,j,rayTracerBase.traceRay
@@ -27,6 +31,12 @@ public class Render
 
 
     }
+
+    /**
+     * prints a grid on the view plane
+     * @param interval between rows and columns
+     * @param color grid color
+     */
     public void printGrid(int interval, Color color){
         if(this.imageWriter == null)
             throw new MissingResourceException("missing builder to image writer","Render","03");

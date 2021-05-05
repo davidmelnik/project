@@ -10,7 +10,7 @@ import static primitives.Util.*;
  *
  * @author Dan
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
 	/**
 	 * List of polygon's vertices
 	 */
@@ -84,6 +84,36 @@ public class Polygon implements Geometry {
 	@Override
 	public Vector getNormal(Point3D point) {
 		return plane.getNormal();
+	}
+
+	@Override
+	//TODO replace plane GeoPoint with Polygon GeoPoint
+	public List<GeoPoint> findGeoIntersections(Ray ray) {
+		List<GeoPoint> list= this.plane.findGeoIntersections(ray);
+		if(list == null)
+			return null;
+		Vector v_prev= this.vertices.get(this.vertices.size()-1).subtract(ray.getP0());
+		Vector v_next= this.vertices.get(0).subtract(ray.getP0());
+		double v_dot_N =ray.getDir().dotProduct(v_prev.crossProduct(v_next).normalized());
+		if(Util.isZero(v_dot_N))
+			return null;// the point On edge
+		boolean positive = v_dot_N>0;
+		for(int i=1; i<this.vertices.size();i++){
+			v_prev = v_next;
+			v_next= this.vertices.get(i).subtract(ray.getP0());
+			v_dot_N =ray.getDir().dotProduct(v_prev.crossProduct(v_next).normalized());
+			if(Util.isZero(v_dot_N))
+				return null;// the point On edge
+			boolean now_positive = v_dot_N>0;
+			if(positive !=now_positive) //if Ni sign is differnt from Ni-1 the point dont on poligon
+				return  null;
+
+		}
+
+
+
+
+			return  list;
 	}
 
 	@Override

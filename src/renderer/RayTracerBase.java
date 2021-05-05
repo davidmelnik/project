@@ -10,5 +10,11 @@ public abstract class RayTracerBase {
     public RayTracerBase(Scene scene) {
         this.scene = scene;
     }
+
+    /**
+     *
+     * @param ray
+     * @return color of the pixel
+     */
     public abstract Color traceRay(Ray ray);
 }
