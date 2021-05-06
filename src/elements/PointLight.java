@@ -22,7 +22,7 @@ public class PointLight  extends Light implements LightSource{
     public PointLight(Color intensity, Point3D position) {
         super(intensity);
         this.position = position;
-        this.kC = 0;
+        this.kC = 1;
         this.kL = 0;
         this.kQ = 0;
     }
@@ -49,7 +49,7 @@ public class PointLight  extends Light implements LightSource{
         if(isZero(dominator)){
             throw new IllegalArgumentException("the dominator =0");
         }
-        return super.getIntensity().scale(1/dominator);
+        return super.getIntensity().reduce(dominator);
     }
 
     @Override
