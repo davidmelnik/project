@@ -42,6 +42,11 @@ public class PointLight  extends Light implements LightSource{
         return this;
     }
 
+    /**
+     *
+     * @param p position
+     * @return intensity at position p
+     */
     @Override
     public Color getIntensity(Point3D p) {
         double distance = this.position.distance(p);
@@ -51,6 +56,7 @@ public class PointLight  extends Light implements LightSource{
         }
         return super.getIntensity().reduce(dominator);
     }
+
 
     @Override
     public Vector getL(Point3D p) {

@@ -18,6 +18,11 @@ public class SpotLight extends PointLight{
         this.direction = direction.normalize();
     }
 
+    /**
+     *
+     * @param p position
+     * @return intensity at position p
+     */
     @Override
     public Color getIntensity(Point3D p) {
         double maximum = Math.max(0,this.direction.dotProduct(super.getL(p)));
