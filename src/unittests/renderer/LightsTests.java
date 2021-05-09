@@ -87,7 +87,28 @@ public class LightsTests {
 		render.renderImage();
 		render.writeToImage();
 	}
+	/**
+	 * Produce a picture of a sphere lighted by a spot light
+	 */
+	@Test
+	public void sphereAllLights() {
+		scene1.geometries.add(sphere);
+		scene1.lights.add(new DirectionalLight(new Color(200, 0, 0), new Vector(1, -1, -1)));
+		scene1.lights.add(new PointLight(new Color(400, 200, 0), new Point3D(-50, -50, 50))//
+				.setKl(0.00001).setKq(0.000001));
+		scene1.lights.add(new SpotLight(new Color(0, 120, 0), new Point3D(50, 50, 50), new Vector(-1, -1, -2)) //
+				.setKl(0.00001).setKq(0.00000001));
 
+
+		ImageWriter imageWriter = new ImageWriter("lightSphereAll", 500, 500);
+		Render render = new Render()//
+				.setImageWriter(imageWriter) //
+				.setCamera(camera1) //
+				.setScene(scene1)
+				.setRayTracer(new RayTracerBasic(scene1));
+		render.renderImage();
+		render.writeToImage();
+	}
 	/**
 	 * Produce a picture of a two triangles lighted by a directional light
 	 */
@@ -138,6 +159,30 @@ public class LightsTests {
 				.setKl(0.0001).setKq(0.000005));
 
 		ImageWriter imageWriter = new ImageWriter("lightTrianglesSpot", 500, 500);
+		Render render = new Render()//
+				.setImageWriter(imageWriter) //
+				.setCamera(camera2) //
+				.setScene(scene2)
+				.setRayTracer(new RayTracerBasic(scene2));
+		render.renderImage();
+		render.writeToImage();
+	}
+
+
+	/**
+	 * Produce a picture of a two triangles lighted by all lights
+	 */
+	@Test
+	public void trianglesAll() {
+		scene2.geometries.add(triangle1.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(300)),
+				triangle2.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(300)));
+		scene2.lights.add(new DirectionalLight(new Color(150, 0, 0), new Vector(1, -1, -1)));
+		scene2.lights.add(new PointLight(new Color(360, 180, 0), new Point3D(-50, -50, 50))//
+				.setKl(0.00001).setKq(0.000001));
+		scene2.lights.add(new SpotLight(new Color(0, 120, 0), new Point3D(50, 50, 50), new Vector(-1, -1, -2)) //
+				.setKl(0.00001).setKq(0.00000001));
+
+		ImageWriter imageWriter = new ImageWriter("lightTrianglesAll", 500, 500);
 		Render render = new Render()//
 				.setImageWriter(imageWriter) //
 				.setCamera(camera2) //
