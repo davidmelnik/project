@@ -10,9 +10,25 @@ import java.util.List;
 import static primitives.Util.alignZero;
 
 public class RayTracerBasic extends RayTracerBase{
-
+    private static final double DELTA = 0.1;
     public RayTracerBasic(Scene scene) {
         super(scene);
+    }
+
+
+    private boolean unshaded(LightSource light, Vector l, Vector n, GeoPoint geopoint) {
+        Vector lightDirection = l.scale(-1); // from point to light source
+        Vector delta = n.scale(n.dotProduct(lightDirection) > 0 ? DELTA : - DELTA);
+        Point3D point = geopoint.point.add(delta);
+        Ray lightRay = new Ray(point, lightDirection);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay);
+        if (intersections == null) return true;
+        double lightDistance = light.getDistance(geopoint.point);
+        for (GeoPoint gp : intersections) {
+            if (alignZero(gp.point.distance(geopoint.point) - lightDistance) <= 0)
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -60,12 +76,14 @@ public class RayTracerBasic extends RayTracerBase{
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0)
             { // sign(nl) == sign(nv)
+                if (unshaded(lightSource,l,n, intersection)) {
                 Color lightIntensity = lightSource.getIntensity(intersection.point);
 
                 // first add effects values and then scale the color in order to save scaling time
                 color = color.add(lightIntensity.scale(
-                        calcDiffusive(kd, nl)+
-                        calcSpecular(ks, l, n, v, nShininess, nl)));
+                        calcDiffusive(kd, nl) +
+                                calcSpecular(ks, l, n, v, nShininess, nl)));
+            }
             }
         }
         return color;

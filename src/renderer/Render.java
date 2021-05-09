@@ -8,13 +8,13 @@ import java.util.MissingResourceException;
 
 public class Render
 {
-    private Scene scene;
+
     private Camera camera;
     private ImageWriter imageWriter;
     private RayTracerBase  rayTracerBase;
 
     public void renderImage(){
-        if(this.scene==null || this.camera==null || this.imageWriter==null || this.rayTracerBase==null)
+        if( this.camera==null || this.imageWriter==null || this.rayTracerBase==null)
             throw new MissingResourceException("missing builder","Render","02");
 
         /**
@@ -60,10 +60,6 @@ public class Render
 
 
 
-    public Render setScene(Scene scene) {
-        this.scene = scene;
-        return this;
-    }
 
     public Render setCamera(Camera camera) {
         this.camera = camera;

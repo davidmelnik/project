@@ -62,4 +62,9 @@ public class PointLight  extends Light implements LightSource{
     public Vector getL(Point3D p) {
         return p.subtract(this.position).normalized();
     }
+
+    @Override
+    public double getDistance(Point3D point) {
+        return point.distance(this.position);
+    }
 }
