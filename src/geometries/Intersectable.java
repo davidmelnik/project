@@ -2,6 +2,7 @@ package geometries;
 
 import primitives.Point3D;
 import primitives.Ray;
+import primitives.Vector;
 
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +33,10 @@ public interface Intersectable {
         public GeoPoint(Geometry geometry, Point3D point) {
             this.geometry = geometry;
             this.point = point;
+        }
+
+        public Vector getNormal(){
+            return this.geometry.getNormal(this.point);
         }
 
 
