@@ -187,7 +187,7 @@ public class ShadowTests {
 						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(30)) //
 		);
 		scene.lights.add( //
-				new SpotLight(new Color(400, 240, 0), new Point3D(-80, -80, 70), new Vector(1, 1, -3)) //
+				new SpotLight(new Color(400, 240, 0), new Point3D(-80, -80, 130), new Vector(1, 1, -3)) //
 						.setKl(1E-5).setKq(1.5E-7));
 
 		Render render = new Render(). //
