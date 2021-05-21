@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Ray {
+    private static final double DELTA = 0.1;
     private Point3D p0;
     private Vector dir;
 
@@ -19,6 +20,12 @@ public class Ray {
     public Ray(Point3D p0, Vector dir) {
         this.p0 = p0;
         this.dir = dir.normalized();
+    }
+
+    public Ray(Point3D point,  Vector dir, Vector n) {
+        this.dir = dir.normalized();
+        Vector delta = n.scale(Util.alignZero(n.dotProduct(dir)) > 0 ? DELTA : - DELTA);
+        this.p0 = point.add(delta);
     }
 
     /**
@@ -90,8 +97,12 @@ public class Ray {
     }
 
     public Point3D getPoint(double t){
-        if (Util.isZero(t))
-            return this.p0;
-        return this.p0.add(this.dir.scale(t));
+        //if (Util.isZero(t))
+        //    return this.p0;
+       try {
+           return this.p0.add(this.dir.scale(t));
+       } catch (Exception e) {
+           return this.p0;
+       }
     }
 }
