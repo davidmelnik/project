@@ -77,7 +77,7 @@ public class ShadowTests {
 	 * Produce a picture of a sphere and triangle with point light and shade
 	 */
 	@Test
-	public void sphereTriangleInitial1() {
+	public void sphereTriangleMoveTriAngle1() {
 		scene.geometries.add( //
 				new Sphere( new Point3D(0, 0, -200),60) //
 						.setEmission(new Color(java.awt.Color.BLUE)) //
@@ -91,7 +91,7 @@ public class ShadowTests {
 						.setKl(1E-5).setKq(1.5E-7));
 
 		Render render = new Render(). //
-				setImageWriter(new ImageWriter("shadowSphereTriangleInitial1", 400, 400)) //
+				setImageWriter(new ImageWriter("sphereTriangleMoveTriAngle1", 400, 400)) //
 				.setCamera(camera) //
 				.setRayTracer(new RayTracerBasic(scene));
 		render.renderImage();
@@ -103,7 +103,7 @@ public class ShadowTests {
 	 * Produce a picture of a sphere and triangle with point light and shade
 	 */
 	@Test
-	public void sphereTriangleInitial2() {
+	public void sphereTriangleMoveTriAngle2() {
 		scene.geometries.add( //
 				new Sphere( new Point3D(0, 0, -200),60) //
 						.setEmission(new Color(java.awt.Color.BLUE)) //
@@ -117,7 +117,7 @@ public class ShadowTests {
 						.setKl(1E-5).setKq(1.5E-7));
 
 		Render render = new Render(). //
-				setImageWriter(new ImageWriter("shadowSphereTriangleInitial2", 400, 400)) //
+				setImageWriter(new ImageWriter("sphereTriangleMoveTriAngle2", 400, 400)) //
 				.setCamera(camera) //
 				.setRayTracer(new RayTracerBasic(scene));
 		render.renderImage();
@@ -128,7 +128,7 @@ public class ShadowTests {
 	 * Produce a picture of a sphere and triangle with point light and shade
 	 */
 	@Test
-	public void sphereTriangleInitial3() {
+	public void sphereTriangleMoveLight1() {
 		scene.geometries.add( //
 				new Sphere( new Point3D(0, 0, -200),60) //
 						.setEmission(new Color(java.awt.Color.BLUE)) //
@@ -142,7 +142,7 @@ public class ShadowTests {
 						.setKl(1E-5).setKq(1.5E-7));
 
 		Render render = new Render(). //
-				setImageWriter(new ImageWriter("shadowSphereTriangleInitial3", 400, 400)) //
+				setImageWriter(new ImageWriter("sphereTriangleMoveLight1", 400, 400)) //
 				.setCamera(camera) //
 				.setRayTracer(new RayTracerBasic(scene));
 		render.renderImage();
@@ -152,7 +152,7 @@ public class ShadowTests {
 	 * Produce a picture of a sphere and triangle with point light and shade
 	 */
 	@Test
-	public void sphereTriangleInitial4() {
+	public void sphereTriangleMoveLight2() {
 		scene.geometries.add( //
 				new Sphere( new Point3D(0, 0, -200),60) //
 						.setEmission(new Color(java.awt.Color.BLUE)) //
@@ -166,7 +166,7 @@ public class ShadowTests {
 						.setKl(1E-5).setKq(1.5E-7));
 
 		Render render = new Render(). //
-				setImageWriter(new ImageWriter("shadowSphereTriangleInitial4", 400, 400)) //
+				setImageWriter(new ImageWriter("sphereTriangleMoveLight2", 400, 400)) //
 				.setCamera(camera) //
 				.setRayTracer(new RayTracerBasic(scene));
 		render.renderImage();
