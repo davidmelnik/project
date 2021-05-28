@@ -43,6 +43,36 @@ public class Camera {
         this.vRight=vTo.crossProduct(vUp).normalized();
     }
 
+
+    /**
+     * select new point to view and rotate camera
+     * @param goal
+     * @param angle
+     * @return
+     */
+    public Camera turnAngle(Point3D goal, double angle) {
+        this.vTo=goal.subtract(this.p0).normalize();
+
+        //set default vUp
+        if (vTo.equals(new Vector(new Point3D(0,1,0)))||vTo.equals(new Vector(new Point3D(0,-1,0))))
+            this.vUp=new Vector(new Point3D(0,0,1));
+        else
+            this.vUp=this.vTo.crossProduct(new Vector(new Point3D(0,1,0))).crossProduct(this.vTo).normalize();
+
+        double cosAngle=Math.cos(angle);
+        double sinAngle=Math.sin(angle);
+        if (isZero(cosAngle))
+            this.vUp=vRight.scale(sinAngle);
+        else if (isZero(sinAngle))
+            this.vUp=vUp.scale(cosAngle);
+        else
+            this.vUp=this.vUp.scale(Math.cos(angle)).add(this.vRight.scale(Math.sin(angle)));
+
+        this.vRight=vTo.crossProduct(vUp).normalized();
+
+        return this;
+    }
+
     public Camera setViewPlaneSize(double width, double height){
         this.width=width;
         this.height=height;
@@ -58,6 +88,11 @@ public class Camera {
         return this;
     }
 
+    public Camera setP0(Point3D p0) {
+        this.p0 = p0;
+
+        return this;
+    }
 
     public Point3D getP0() {
         return p0;
