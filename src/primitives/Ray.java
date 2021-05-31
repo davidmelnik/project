@@ -3,8 +3,12 @@ package primitives;
 import geometries.Intersectable;
 import geometries.Intersectable.GeoPoint;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
+
+import static primitives.Util.isZero;
 
 public class Ray {
     private static final double DELTA = 0.1;
@@ -70,6 +74,49 @@ public class Ray {
             }
         }
         return close_point;
+    }
+
+    /**
+     *
+     * @param k distribution factor
+     * @param normal the normal must be in the direction of the new rays
+     * @return
+     */
+    public LinkedList<Ray> getBeamOfRays (double k, Vector normal){
+        int numRays=20;
+        Point3D center= getPoint(100*k);
+        Vector xVector, yVector;
+
+        if (this.getDir().equals(new Vector(new Point3D(0,1,0)))||this.getDir().equals(new Vector(new Point3D(0,-1,0))))
+            yVector=new Vector(new Point3D(0,0,1));
+        else
+            yVector=this.getDir().crossProduct(new Vector(new Point3D(0,1,0))).crossProduct(this.getDir()).normalize();
+
+        xVector=this.getDir().crossProduct(yVector).normalized();
+
+
+
+        Random random = new Random();
+        LinkedList<Ray> list = new LinkedList();
+        Vector newVector;
+        for(int i=0; i<numRays; i++){
+            do {
+                double x=random.nextDouble()*2-1;
+                double y=(random.nextDouble()*2-1)*Math.sqrt(1-x*x);
+                Point3D point =center;
+                if (!isZero(x))
+                    point.add(xVector.scale(x));
+                if (!isZero(y))
+                    point.add(yVector.scale(y));
+                newVector=point.subtract(this.getP0()).normalize();
+            } while(newVector.dotProduct(normal)<=0);
+
+
+            list.add(new Ray(this.p0,newVector));
+        }
+
+        return list;
+
     }
 
     @Override

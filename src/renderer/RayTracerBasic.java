@@ -94,6 +94,14 @@ public class RayTracerBasic extends RayTracerBase{
     private Color calcGlobalEffects(GeoPoint geopoint, Ray ray, int level, double k) {
         Color color= Color.BLACK;
         Material material= geopoint.geometry.getMaterial();
+
+        Vector normal=geopoint.getNormal();
+
+        if (normal.dotProduct(ray.getDir())<0)
+            normal.scale(-1);
+        Vector oppositeNormal=normal.scale(-1);
+
+
         double kr= material.kR, kkr= k * kr;
         if (kkr> MIN_CALC_COLOR_K) {
             Ray reflectedRay= constructReflectedRay(geopoint.getNormal(), geopoint.point, ray);
@@ -106,10 +114,16 @@ public class RayTracerBasic extends RayTracerBase{
         double kt = material.kT, kkt= k * kt;
         if (kkt> MIN_CALC_COLOR_K) {
             Ray refractedRay= constructRefractedRay(geopoint.getNormal(), geopoint.point, ray);
-            GeoPoint refractedPoint = findClosestIntersection(refractedRay);
+            List<Ray> rayList=refractedRay.getBeamOfRays(material.kB,oppositeNormal);
+            for (Ray blurryRay:rayList) {
+                GeoPoint refractedPoint = findClosestIntersection(refractedRay);
 
-            if (refractedPoint!=null)
-                color = color.add(calcColor(refractedPoint, refractedRay, level - 1, kkt).scale(kt));
+                if (refractedPoint!=null)
+                    //TODO set factors
+                    color = color.add(calcColor(refractedPoint, refractedRay, level - 1, kkt).scale(kt));
+
+            }
+
 
         }
         return color;
