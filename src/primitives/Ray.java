@@ -100,16 +100,16 @@ public class Ray {
         LinkedList<Ray> list = new LinkedList();
         Vector newVector;
         for(int i=0; i<numRays; i++){
-            do {
+            //do {
                 double x=random.nextDouble()*2-1;
                 double y=(random.nextDouble()*2-1)*Math.sqrt(1-x*x);
                 Point3D point =center;
                 if (!isZero(x))
-                    point.add(xVector.scale(x));
+                    point=point.add(xVector.scale(x));
                 if (!isZero(y))
-                    point.add(yVector.scale(y));
+                    point=point.add(yVector.scale(y));
                 newVector=point.subtract(this.getP0()).normalize();
-            } while(newVector.dotProduct(normal)<=0);
+           // } while(newVector.dotProduct(normal)<=0);
 
 
             list.add(new Ray(this.p0,newVector));

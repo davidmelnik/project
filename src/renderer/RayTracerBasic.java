@@ -114,16 +114,26 @@ public class RayTracerBasic extends RayTracerBase{
         double kt = material.kT, kkt= k * kt;
         if (kkt> MIN_CALC_COLOR_K) {
             Ray refractedRay= constructRefractedRay(geopoint.getNormal(), geopoint.point, ray);
-            List<Ray> rayList=refractedRay.getBeamOfRays(material.kB,oppositeNormal);
-            for (Ray blurryRay:rayList) {
+            if (material.kB==1){
                 GeoPoint refractedPoint = findClosestIntersection(refractedRay);
 
                 if (refractedPoint!=null)
-                    //TODO set factors
-                    color = color.add(calcColor(refractedPoint, refractedRay, level - 1, kkt).scale(kt));
-
+                   color = color.add(calcColor(refractedPoint, refractedRay, level - 1, kkt).scale(kt));
             }
+            else {
+                List<Ray> rayList = refractedRay.getBeamOfRays(material.kB, oppositeNormal);
+                Color beamColor=new Color(Color.BLACK);
+                for (Ray blurryRay : rayList) {
 
+                    GeoPoint refractedPoint = findClosestIntersection(blurryRay);
+
+                    if (refractedPoint != null)
+                        beamColor=beamColor.add(calcColor(refractedPoint, blurryRay, level - 1, kkt));
+                        //color = color.add(calcColor(refractedPoint, blurryRay, level - 1, kkt)).scale(kt/20.0);
+
+                }
+                color = color.add((beamColor).scale(kt/20.0));
+            }
 
         }
         return color;
@@ -184,7 +194,7 @@ public class RayTracerBasic extends RayTracerBase{
                 double ktr= transparency(lightSource, l, n, intersection);
                 if ( ktr* k > MIN_CALC_COLOR_K){
                 //if (unshaded(lightSource,l,n, intersection)) {
-                Color lightIntensity = lightSource.getIntensity(intersection.point).scale(ktr);;
+                Color lightIntensity = lightSource.getIntensity(intersection.point).scale(ktr);
 
                 // first add effects values and then scale the color in order to save scaling time
                 color = color.add(lightIntensity.scale(
