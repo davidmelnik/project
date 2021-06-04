@@ -42,7 +42,17 @@ public class Camera {
 
         this.vRight=vTo.crossProduct(vUp).normalized();
     }
+/*
+    public Camera(Point3D p0, Vector vTo, Vector vUp) {
+        this.p0 = p0;
+        this.vUp = vUp.normalized();
+        this.vTo = vTo.normalized();
+        if (!isZero(vUp.dotProduct(vTo)))
+            throw new IllegalArgumentException ("vectors aren't vertical");
 
+        this.vRight=vTo.crossProduct(vUp).normalized();
+    }
+*/
 
     /**
      * select new point to view and rotate camera

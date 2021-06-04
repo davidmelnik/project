@@ -17,6 +17,7 @@ public class Material {
         this.kT=0;
         this.kR=0;
         this.kB=1;
+        this.kG=1;
         this.nShininess=0;
     }
 
@@ -47,6 +48,11 @@ public class Material {
 
     public Material setkB(double kB) {
         this.kB = kB;
+        return this;
+    }
+
+    public Material setKg(double kG) {
+        this.kG = kG;
         return this;
     }
 

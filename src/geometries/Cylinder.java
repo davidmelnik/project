@@ -5,6 +5,9 @@ import primitives.Ray;
 import primitives.Vector;
 import primitives.Util;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Cylinder extends Tube{
     private double height;
 
@@ -45,6 +48,25 @@ public class Cylinder extends Tube{
 
     public double getHeight() {
         return height;
+    }
+
+    @Override
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
+        List<GeoPoint> tubeList= super.findGeoIntersections(ray);
+        if (tubeList==null)
+            return null;
+        List<GeoPoint> cylinderList=new LinkedList<>();
+        for (GeoPoint point:tubeList) {
+            Vector vec1 = point.point.subtract(this.axisRay.getP0());
+            Vector vec2 = point.point.subtract(this.axisRay.getPoint(this.height));
+            if (this.axisRay.getDir().dotProduct(vec1)*this.axisRay.getDir().dotProduct(vec2)<0)
+                cylinderList.add(point);
+
+        }
+
+
+
+        return cylinderList;
     }
 
     @Override

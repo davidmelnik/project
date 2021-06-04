@@ -11,6 +11,7 @@ import java.util.Random;
 import static primitives.Util.isZero;
 
 public class Ray {
+    private static int NUMBER_RAYS=20;
     private static final double DELTA = 0.1;
     private Point3D p0;
     private Vector dir;
@@ -30,6 +31,10 @@ public class Ray {
         this.dir = dir.normalized();
         Vector delta = n.scale(Util.alignZero(n.dotProduct(dir)) > 0 ? DELTA : - DELTA);
         this.p0 = point.add(delta);
+    }
+
+    public static void setNumberRays(int numberRays) {
+        NUMBER_RAYS = numberRays;
     }
 
     /**
@@ -83,7 +88,7 @@ public class Ray {
      * @return
      */
     public LinkedList<Ray> getBeamOfRays (double k, Vector normal){
-        int numRays=20;
+        //int numRays=20;
         Point3D center= getPoint(100*k);
         Vector xVector, yVector;
 
@@ -98,9 +103,10 @@ public class Ray {
 
         Random random = new Random();
         LinkedList<Ray> list = new LinkedList();
+        list.add(this);
         Vector newVector;
-        for(int i=0; i<numRays; i++){
-            //do {
+        for(int i=0; i<NUMBER_RAYS-1; i++){
+            do {
                 double x=random.nextDouble()*2-1;
                 double y=(random.nextDouble()*2-1)*Math.sqrt(1-x*x);
                 Point3D point =center;
@@ -109,7 +115,9 @@ public class Ray {
                 if (!isZero(y))
                     point=point.add(yVector.scale(y));
                 newVector=point.subtract(this.getP0()).normalize();
-           // } while(newVector.dotProduct(normal)<=0);
+                double test= newVector.dotProduct(normal);
+
+            } while(newVector.dotProduct(normal)<=0);
 
 
             list.add(new Ray(this.p0,newVector));
