@@ -11,7 +11,7 @@ import java.util.Random;
 import static primitives.Util.isZero;
 
 public class Ray {
-    private static int NUMBER_RAYS=20;
+    private static int NUMBER_RAYS=50;
     private static final double DELTA = 0.1;
     private Point3D p0;
     private Vector dir;

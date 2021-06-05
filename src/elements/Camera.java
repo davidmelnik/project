@@ -64,10 +64,10 @@ public class Camera {
         this.vTo=goal.subtract(this.p0).normalize();
 
         //set default vUp
-        if (vTo.equals(new Vector(new Point3D(0,1,0)))||vTo.equals(new Vector(new Point3D(0,-1,0))))
-            this.vUp=new Vector(new Point3D(0,0,1));
+        if (vTo.equals(new Vector(new Point3D(0,0,1)))||vTo.equals(new Vector(new Point3D(0,0,-1))))
+            this.vUp=new Vector(new Point3D(0,1,0));
         else
-            this.vUp=this.vTo.crossProduct(new Vector(new Point3D(0,1,0))).crossProduct(this.vTo).normalize();
+            this.vUp=this.vTo.crossProduct(new Vector(new Point3D(0,0,1))).crossProduct(this.vTo).normalize();
 
         double cosAngle=Math.cos(angle);
         double sinAngle=Math.sin(angle);
