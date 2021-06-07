@@ -106,20 +106,16 @@ public class RayTracerBasic extends RayTracerBase{
         double kr= material.kR, kkr= k * kr;
         if (kkr> MIN_CALC_COLOR_K) {
 
-            //Ray reflectedRay= constructReflectedRay(geopoint.getNormal(), geopoint.point, ray);
-            //GeoPoint reflectedPoint = findClosestIntersection(reflectedRay);
-
-            //if (reflectedPoint!=null)
-                   // color = color.add(calcColor(reflectedPoint, reflectedRay, level - 1, kkr).scale(kr));
-//////////////////////////
-
             Ray reflectedRay= constructReflectedRay(geopoint.getNormal(), geopoint.point, ray);
+
+            //if the material isn't glossy construct a single ray
             if (material.kG==1){
                 GeoPoint reflectedPoint = findClosestIntersection(reflectedRay);
 
                 if (reflectedPoint!=null)
                     color = color.add(calcColor(reflectedPoint, reflectedRay, level - 1, kkr).scale(kr));
             }
+            //else construct a beam of rays and calculate every single ray
             else {
                 List<Ray> rayList = reflectedRay.getBeamOfRays(material.kG, normal);
                 Color beamColor = new Color(Color.BLACK);
@@ -129,21 +125,22 @@ public class RayTracerBasic extends RayTracerBase{
 
                     if (reflectedPoint != null)
                         beamColor = beamColor.add(calcColor(reflectedPoint, glossyRay, level - 1, kkr));
-                    //color = color.add(calcColor(refractedPoint, blurryRay, level - 1, kkt)).scale(kt/20.0);
 
                 }
-                color = color.add((beamColor).scale(kr / 20.0));
+                color = color.add((beamColor).scale(kr / Ray.getNumberRays()));
             }
         }
         double kt = material.kT, kkt= k * kt;
         if (kkt> MIN_CALC_COLOR_K) {
             Ray refractedRay= constructRefractedRay(geopoint.getNormal(), geopoint.point, ray);
+            //if the material isn't glossy construct a single ray
             if (material.kB==1){
                 GeoPoint refractedPoint = findClosestIntersection(refractedRay);
 
                 if (refractedPoint!=null)
                    color = color.add(calcColor(refractedPoint, refractedRay, level - 1, kkt).scale(kt));
             }
+            //else construct a beam of rays and calculate every single ray
             else {
                 List<Ray> rayList = refractedRay.getBeamOfRays(material.kB, oppositeNormal);
                 Color beamColor=new Color(Color.BLACK);
@@ -153,10 +150,9 @@ public class RayTracerBasic extends RayTracerBase{
 
                     if (refractedPoint != null)
                         beamColor=beamColor.add(calcColor(refractedPoint, blurryRay, level - 1, kkt));
-                        //color = color.add(calcColor(refractedPoint, blurryRay, level - 1, kkt)).scale(kt/20.0);
 
                 }
-                color = color.add((beamColor).scale(kt/20.0));
+                color = color.add((beamColor).scale(kt/Ray.getNumberRays()));
             }
 
         }

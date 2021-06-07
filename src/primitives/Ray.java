@@ -11,6 +11,10 @@ import java.util.Random;
 import static primitives.Util.isZero;
 
 public class Ray {
+    public static int getNumberRays() {
+        return NUMBER_RAYS;
+    }
+
     private static int NUMBER_RAYS=50;
     private static final double DELTA = 0.1;
     private Point3D p0;
@@ -85,18 +89,22 @@ public class Ray {
      *
      * @param k distribution factor
      * @param normal the normal must be in the direction of the new rays
-     * @return
+     * @return a list of rays in a circle in the area of the original ray
      */
     public LinkedList<Ray> getBeamOfRays (double k, Vector normal){
-        //int numRays=20;
-        Point3D center= getPoint(100*k);
-        Vector xVector, yVector;
 
+
+        Point3D center= getPoint(100*k);//center of the circle
+
+        Vector xVector, yVector;//two orthogonal vectors which create the circle
+
+        //create a vector which is orthogonal to the given ray
         if (this.getDir().equals(new Vector(new Point3D(0,1,0)))||this.getDir().equals(new Vector(new Point3D(0,-1,0))))
             yVector=new Vector(new Point3D(0,0,1));
         else
             yVector=this.getDir().crossProduct(new Vector(new Point3D(0,1,0))).crossProduct(this.getDir()).normalize();
 
+        //create a vector which is orthogonal to the given ray and the new vector
         xVector=this.getDir().crossProduct(yVector).normalized();
 
 
@@ -105,6 +113,8 @@ public class Ray {
         LinkedList<Ray> list = new LinkedList();
         list.add(this);
         Vector newVector;
+
+        // create new rays and add them to the list
         for(int i=0; i<NUMBER_RAYS-1; i++){
             do {
                 double x=random.nextDouble()*2-1;
