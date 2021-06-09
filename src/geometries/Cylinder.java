@@ -20,6 +20,16 @@ public class Cylinder extends Tube{
     public Cylinder(Ray axisRay, double radius, double height) {
         super(axisRay, radius);
         this.height = height;
+
+        //find the min and max x,y,z
+        Point3D base1= axisRay.getP0();
+        Point3D base2= axisRay.getPoint(height);
+        minX = base1.getX()< base2.getX()? base1.getX()-radius: base2.getX()-radius;
+        minY = base1.getY()< base2.getY()? base1.getY()-radius: base2.getY()-radius;
+        minZ = base1.getZ()< base2.getZ()? base1.getZ()-radius: base2.getZ()-radius;
+        maxX = base1.getX()> base2.getX()? base1.getX()+radius: base2.getX()+radius;
+        maxY = base1.getY()> base2.getY()? base1.getY()+radius: base2.getY()+radius;
+        maxZ = base1.getZ()> base2.getZ()? base1.getZ()+radius: base2.getZ()+radius;
     }
 
     @Override

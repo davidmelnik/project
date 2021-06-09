@@ -21,6 +21,13 @@ public class Sphere extends Geometry {
     public Sphere(Point3D center, double radius) {
         this.center = center;
         this.radius = radius;
+        //the min and max x,y,z
+        minX = center.getX()-radius;
+        minY = center.getY()-radius;
+        minZ = center.getZ()-radius;
+        maxX = center.getX()+radius;
+        maxY = center.getY()+radius;
+        maxZ = center.getZ()+radius;
     }
 
     public Point3D getCenter() {

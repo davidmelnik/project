@@ -11,6 +11,7 @@ import primitives.Vector;
 public abstract class Geometry implements Intersectable {
    protected Color emmission =Color.BLACK;
    private Material material =new Material();
+   protected double minX,minY,minZ,maxX,maxY,maxZ;
 
    /**
     * emission builder
@@ -41,12 +42,27 @@ public abstract class Geometry implements Intersectable {
       return material;
    }
 
-   public abstract double getMinX();
+   public double getMinX() {
+      return minX;
+   }
 
-   public abstract double getMinY();
-   public abstract double getMinZ();
-   public abstract double getMaxX();
-   public abstract double getMaxY();
-   public abstract double getMaxZ();
+   public double getMinY() {
+      return minY;
+   }
 
+   public double getMinZ() {
+      return minZ;
+   }
+
+   public double getMaxX() {
+      return maxX;
+   }
+
+   public double getMaxY() {
+      return maxY;
+   }
+
+   public double getMaxZ() {
+      return maxZ;
+   }
 }

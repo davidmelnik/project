@@ -44,6 +44,30 @@ public class Geometries implements Intersectable{
         return points;
     }
 
+    /**
+     *
+     * @return list contain all Geometry in recursion
+     */
+    public List<Geometry> FindAllGeometries() {
+       return FindAllGeometries(intersectList);
+    }
+
+    /**
+     *
+     * @param geometries
+     * @return list contain all Geometry in recursion
+     */
+    private List<Geometry> FindAllGeometries(List<Intersectable> geometries){
+        List<Geometry> list =new LinkedList();
+        for (Intersectable item:geometries){
+            if(item instanceof Geometry)
+                list.add((Geometry) item);
+            else
+                list.addAll(FindAllGeometries(((Geometries)item).intersectList));
+        }
+        return list;
+    }
+
     @Override
     public List<Point3D> findIntersections(Ray ray) {
         List<Point3D> points =new LinkedList();

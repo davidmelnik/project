@@ -69,6 +69,13 @@ public class Polygon extends Geometry {
 		// the
 		// polygon is convex ("kamur" in Hebrew).
 		boolean positive = edge1.crossProduct(edge2).dotProduct(n) > 0;
+
+		minX=vertices[0].getX();
+		maxX=minX;
+		minY=vertices[0].getY();
+		maxY=minY;
+		minZ=vertices[0].getZ();
+		maxZ=minZ;
 		for (int i = 1; i < vertices.length; ++i) {
 			// Test that the point is in the same plane as calculated originally
 			if (!isZero(vertices[i].subtract(vertices[0]).dotProduct(n)))
@@ -78,7 +85,24 @@ public class Polygon extends Geometry {
 			edge2 = vertices[i].subtract(vertices[i - 1]);
 			if (positive != (edge1.crossProduct(edge2).dotProduct(n) > 0))
 				throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
+
+			//FIND THE MAX X,Y,Z IN THE POLYGON
+			if(minX > vertices[i].getX())
+				minX=vertices[i].getX();
+			if(minY > vertices[i].getY())
+				minY=vertices[i].getY();
+			if(minZ > vertices[i].getZ())
+				minZ=vertices[i].getZ();
+			if(maxX < vertices[i].getX())
+				maxX=vertices[i].getX();
+			if(maxY < vertices[i].getY())
+				maxY=vertices[i].getY();
+			if(maxZ < vertices[i].getZ())
+				maxZ=vertices[i].getZ();
+
 		}
+
+
 	}
 
 	@Override
@@ -113,6 +137,7 @@ public class Polygon extends Geometry {
 		return  list;
 	}
 
+
 	@Override
 	public List<Point3D> findIntersections(Ray ray) {
 		List<Point3D> list= this.plane.findIntersections(ray);
@@ -136,4 +161,6 @@ public class Polygon extends Geometry {
 		}
 		return  list;
 	}
+
+
 }
