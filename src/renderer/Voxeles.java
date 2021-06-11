@@ -1,7 +1,7 @@
 package renderer;
 
 import geometries.Geometry;
-import geometries.Intersectable;
+import geometries.Intersectable.*;
 import primitives.Point3D;
 import primitives.Ray;
 import scene.Scene;
@@ -14,7 +14,7 @@ public class Voxeles {
     private Scene scene;
     LinkedList<Geometry>[][][] cell;
     double begX=0, begY=0, begZ=0, cellSizeX,cellSizeY,cellSizeZ, gridSize;
-            int gridResolution, countVoxel;
+            int gridResolution, countVoxelX,countVoxelY,countVoxelZ;
 
     public Voxeles(Scene scene) {
         this.scene = scene;
@@ -40,7 +40,7 @@ public class Voxeles {
                     }
         }
     }
-    public List<Intersectable.GeoPoint> findGeoIntersections(Ray ray){
+    public List<GeoPoint> findGeoIntersections(Ray ray){
 
         Point3D startPoint= ray.getP0();
         int X= (int) ((startPoint.getX()-begX)/cellSizeX);
@@ -54,43 +54,82 @@ public class Voxeles {
 
         double tDeltaX=0;//???????????????
         if(ray.getDir().getHead().getX() !=0)
-            tDeltaX=cellSizeX/ (ray.getDir().getHead().getX());
-        double tDeltaY=cellSizeY/ (ray.getDir().getHead().getY());
-        double tDeltaZ=cellSizeZ/ (ray.getDir().getHead().getZ());
+            tDeltaX=stepX* cellSizeX/ (ray.getDir().getHead().getX());
+        double tDeltaY=stepY* cellSizeY/ (ray.getDir().getHead().getY());
+        double tDeltaZ=stepZ* cellSizeZ/ (ray.getDir().getHead().getZ());
 
-        double tMaxX= (X* cellSizeX + begX)-startPoint.getX();
+        double tMaxX= stepX*(((X+(stepX==1? 1:0))* cellSizeX  + begX)-startPoint.getX())/tDeltaX;
+        double tMaxY= stepY*(((Y+(stepY==1? 1:0))* cellSizeY  + begY)-startPoint.getY())/tDeltaY;
+        double tMaxZ= stepZ*(((Z+(stepZ==1? 1:0))* cellSizeZ  + begZ)-startPoint.getZ())/tDeltaZ;
 
-        list= null;
+
+        List<GeoPoint> retList=null;
         do {
-            if(tMaxX < tMaxY) {
-                if(tMaxX < tMaxZ) {
-                    X= X + stepX;
-                    if(X == justOutX)
-                        return(null); /* outside grid */
-                    tMaxX= tMaxX + tDeltaX;
+                if (tMaxX < tMaxY) {
+                    if (tMaxX < tMaxZ) {
+                        X = X + stepX;
+                        if (X< 0 || X>=countVoxelX)
+                            return null; /* outside grid */
+                        tMaxX = tMaxX + tDeltaX;
+                    } else {
+                        Z = Z + stepZ;
+                        if (Z< 0 || Z>=countVoxelZ)
+                            return null;
+                        tMaxZ = tMaxZ + tDeltaZ;
+                    }
                 } else {
-                    Z= Z + stepZ;
-                    if(Z == justOutZ)
-                        return(null);
-                    tMaxZ= tMaxZ + tDeltaZ;
+                    if (tMaxY < tMaxZ) {
+                        Y = Y + stepY;
+                        if (Y< 0 || Y>=countVoxelY)
+                            return null;
+                        tMaxY = tMaxY + tDeltaY;
+                    } else {
+                        Z = Z + stepZ;
+                        if (Z< 0 || Z>=countVoxelZ)
+                            return null;
+                        tMaxZ = tMaxZ + tDeltaZ;
+                    }
                 }
-            } else {
-                if(tMaxY < tMaxZ) {
-                    Y= Y + stepY;
-                    if(Y == justOutY)
-                        return(null);
-                    tMaxY= tMaxY + tDeltaY;
-                } else {
-                    Z= Z + stepZ;
-                    if(Z == justOutZ)
-                        return(null);
-                    tMaxZ= tMaxZ + tDeltaZ;
-                }
-            }
-            list= ObjectList[X][Y][Z];
-        } while(list == null);
-        return(list);
+                if(cell[X][Y][Z] !=null)
+                    retList= findGeoInVoxel(ray,X,Y,Z);
+            } while (retList == null);
+
+        return retList;
 
     }
+
+    /**
+     *
+     * @param ray
+     * @param X
+     * @param Y
+     * @param Z
+     * @return list contain all the geopoint in this voxel, if not geopoint return null
+     * we assume that list in voxel isn't null
+     */
+    private List<GeoPoint> findGeoInVoxel(Ray ray, int X,int Y, int Z){
+        List<GeoPoint> retList = new LinkedList();
+        List<Geometry> list =cell[X][Y][Z];
+        double startX= begX +X*cellSizeX;
+        double startY= begY +Y*cellSizeY;
+        double startZ= begZ +Z*cellSizeZ;
+        for (Geometry geometry: list
+             ) {
+            List<GeoPoint> listGeom=geometry.findGeoIntersections(ray);
+            if(listGeom !=null) {
+                for (GeoPoint geoPoint : listGeom
+                ) {
+                    Point3D point= geoPoint.point;
+                    if(point.getX()>=startX  &&point.getX()<= startX+cellSizeX
+                    &&point.getY()>= startY && point.getY()<=startY+cellSizeY
+                    &&point.getZ()>=startZ && point.getZ()<=startZ+cellSizeZ)
+                        retList.add(geoPoint);
+                }
+            }
+
+        }
+        return retList;
+    }
+
 
 }
