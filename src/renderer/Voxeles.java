@@ -16,7 +16,7 @@ import static primitives.Util.isZero;
 public class Voxeles {
     private Scene scene;
     LinkedList<Geometry>[][][] cell;
-    double begX=0, begY=0, begZ=0,endX,endY,endZ ,cellSizeX,cellSizeY,cellSizeZ,;
+    double begX=0, begY=0, begZ=0,endX,endY,endZ ,cellSizeX,cellSizeY,cellSizeZ;
             int  countVoxelX,countVoxelY,countVoxelZ;
 
     /**
@@ -52,6 +52,7 @@ public class Voxeles {
     }
 
     public void InitializeVoxel(){
+        cell= new LinkedList[countVoxelX][countVoxelY][countVoxelZ];
         List<Geometry>  list= scene.geometries.FindAllGeometries();
         for (Geometry geometry:list)
         {
@@ -78,13 +79,13 @@ public class Voxeles {
         //if ray in voxel
         if(point.getX() >=begX && point.getX()< endX
         &&point.getY()>=begY && point.getY()< endY
-        && point.getZ()>= begZ && point.getY()<endZ)
+        && point.getZ()>= begZ && point.getZ()<endZ)
             return point;
 
-        double min_t=0,current;
+        double min_t=Double.POSITIVE_INFINITY,current;
         if(!isZero(ray.getDir().getHead().getX())) {
             current = (begX - point.getX()) / ray.getDir().getHead().getX();
-            if (current > 0)
+            if (current > 0 && current < min_t)
                 min_t = current;
             current = (endX - point.getX()) / ray.getDir().getHead().getX();
             if (current > 0 && current < min_t)
@@ -214,6 +215,8 @@ public class Voxeles {
             }
 
         }
+        if (retList.isEmpty())
+            return null;
         return retList;
     }
 

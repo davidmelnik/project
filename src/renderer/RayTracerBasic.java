@@ -39,7 +39,7 @@ public class RayTracerBasic extends RayTracerBase{
 
     public RayTracerBase setVoxelOn(boolean voxelOn) {
         if (voxelOn && voxeles == null) {
-            throw new IllegalArgumentException("the voxel is null")
+            throw new IllegalArgumentException("the voxel is null");
         }
         this.voxelOn = voxelOn;
         return this;
@@ -72,8 +72,20 @@ public class RayTracerBasic extends RayTracerBase{
     @Override
     public Color traceRay(Ray ray) {
         List<GeoPoint> intersections;
-        if(isVoxelOn())
-            intersections= voxeles.findGeoIntersections(ray);
+        if(isVoxelOn()) {
+            intersections = voxeles.findGeoIntersections(ray);
+            List<GeoPoint> intersections2 =scene.geometries.findGeoIntersections(ray);
+            GeoPoint closestPoint1 = ray.getClosestGeoPoint(intersections);
+            GeoPoint closestPoint2 = ray.getClosestGeoPoint(intersections2);
+            if((closestPoint1== null && closestPoint2!=null )||(closestPoint1!= null && closestPoint2==null)||
+                    (closestPoint1!= null &&closestPoint2!=null && !closestPoint1.equals(closestPoint2))){
+                intersections = voxeles.findGeoIntersections(ray);
+
+            }
+
+
+
+        }
         else
             intersections = scene.geometries.findGeoIntersections(ray);
         GeoPoint closestPoint = ray.getClosestGeoPoint(intersections);
