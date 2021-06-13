@@ -4,11 +4,14 @@ import geometries.Geometry;
 import geometries.Intersectable.*;
 import primitives.Point3D;
 import primitives.Ray;
+import primitives.Util.*;
 import scene.Scene;
 
 import javax.naming.InitialContext;
 import java.util.LinkedList;
 import java.util.List;
+
+import static primitives.Util.isZero;
 
 public class Voxeles {
     private Scene scene;
@@ -69,9 +72,49 @@ public class Voxeles {
                     }
         }
     }
+
+    private Point3D findStartPoint(Ray ray){
+        Point3D point =ray.getP0();
+        //if ray in voxel
+        if(point.getX() >=begX && point.getX()< endX
+        &&point.getY()>=begY && point.getY()< endY
+        && point.getZ()>= begZ && point.getY()<endZ)
+            return point;
+
+        double min_t=0,current;
+        if(!isZero(ray.getDir().getHead().getX())) {
+            current = (begX - point.getX()) / ray.getDir().getHead().getX();
+            if (current > 0)
+                min_t = current;
+            current = (endX - point.getX()) / ray.getDir().getHead().getX();
+            if (current > 0 && current < min_t)
+                min_t = current;
+        }
+
+        if(!isZero(ray.getDir().getHead().getY())) {
+            current = (begY - point.getY()) / ray.getDir().getHead().getY();
+            if (current > 0 && current < min_t)
+                min_t = current;
+            current = (endY - point.getY()) / ray.getDir().getHead().getY();
+            if (current > 0 && current < min_t)
+                min_t = current;
+        }
+
+        if(!isZero(ray.getDir().getHead().getZ())) {
+            current = (begZ - point.getZ()) / ray.getDir().getHead().getZ();
+            if (current > 0 && current < min_t)
+                min_t = current;
+            current = (endZ - point.getZ()) / ray.getDir().getHead().getZ();
+            if (current > 0 && current < min_t)
+                min_t = current;
+        }
+        return ray.getPoint(min_t);
+
+    }
+
     public List<GeoPoint> findGeoIntersections(Ray ray){
 
-        Point3D startPoint= ray.getP0();
+        Point3D startPoint= findStartPoint(ray);
         int X= (int) ((startPoint.getX()-begX)/cellSizeX);
         int Y= (int) ((startPoint.getY()-begY)/cellSizeY);
         int Z= (int) ((startPoint.getZ()-begZ)/cellSizeZ);
@@ -138,6 +181,8 @@ public class Voxeles {
         return retList;
 
     }
+
+
 
     /**
      *

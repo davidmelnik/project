@@ -37,11 +37,12 @@ public class RayTracerBasic extends RayTracerBase{
         return voxelOn;
     }
 
-    public void setVoxelOn(boolean voxelOn) {
+    public RayTracerBase setVoxelOn(boolean voxelOn) {
         if (voxelOn && voxeles == null) {
             throw new IllegalArgumentException("the voxel is null")
         }
         this.voxelOn = voxelOn;
+        return this;
     }
 
     /**

@@ -184,6 +184,23 @@ public class LightsTests {
 		render.writeToImage();
 	}
 
+	/**
+	 * Produce a picture of a sphere lighted by a directional light
+	 */
+	@Test
+	public void sphereDirectionalVOXEL() {
+
+		scene1.geometries.add(sphere);
+		scene1.lights.add(new DirectionalLight(new Color(500, 300, 0), new Vector(1, 1, -1)));
+		Voxeles voxeles= new Voxeles(scene1,-100,-100,-200,150,150,100,50,50,50);
+		ImageWriter imageWriter = new ImageWriter("lightSphereDirectionalVOXEL", 500, 500);
+		Render render = new Render()//
+				.setImageWriter(imageWriter) //
+				.setCamera(camera1) //
+				.setRayTracer(new RayTracerBasic(scene1).setVoxel(voxeles).);
+		render.renderImage();
+		render.writeToImage();
+	}
 
 
 }
