@@ -14,13 +14,35 @@ public class RayTracerBasic extends RayTracerBase{
     private static final double INITIAL_K = 1.0;
     private static final int MAX_CALC_COLOR_LEVEL = 10;
     private static final double MIN_CALC_COLOR_K = 0.001;
+    Voxeles voxeles;
+    boolean voxelOn;
 
 
 
     public RayTracerBasic(Scene scene) {
         super(scene);
+        voxelOn=false;
     }
 
+    public Voxeles getVoxeles() {
+        return voxeles;
+    }
+
+    public RayTracerBasic setVoxeles(Voxeles voxeles) {
+        this.voxeles = voxeles;
+        return this;
+    }
+
+    public boolean isVoxelOn() {
+        return voxelOn;
+    }
+
+    public void setVoxelOn(boolean voxelOn) {
+        if (voxelOn && voxeles == null) {
+            throw new IllegalArgumentException("the voxel is null")
+        }
+        this.voxelOn = voxelOn;
+    }
 
     /**
      *
@@ -48,8 +70,11 @@ public class RayTracerBasic extends RayTracerBase{
 
     @Override
     public Color traceRay(Ray ray) {
-
-        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
+        List<GeoPoint> intersections;
+        if(isVoxelOn())
+            intersections= voxeles.findGeoIntersections(ray);
+        else
+            intersections = scene.geometries.findGeoIntersections(ray);
         GeoPoint closestPoint = ray.getClosestGeoPoint(intersections);
         return closestPoint== null ? scene.background: calcColor(closestPoint, ray);
     }

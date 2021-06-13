@@ -13,12 +13,41 @@ import java.util.List;
 public class Voxeles {
     private Scene scene;
     LinkedList<Geometry>[][][] cell;
-    double begX=0, begY=0, begZ=0, cellSizeX,cellSizeY,cellSizeZ, gridSize;
-            int gridResolution, countVoxelX,countVoxelY,countVoxelZ;
+    double begX=0, begY=0, begZ=0,endX,endY,endZ ,cellSizeX,cellSizeY,cellSizeZ,;
+            int  countVoxelX,countVoxelY,countVoxelZ;
 
-    public Voxeles(Scene scene) {
+    /**
+     *
+     * @param scene
+     * @param begX
+     * @param begY
+     * @param begZ
+     * @param endX end bigger than beg
+     * @param endY end bigger than beg
+     * @param endZ end bigger than beg
+     * @param countVoxelX
+     * @param countVoxelY
+     * @param countVoxelZ
+     */
+    public Voxeles(Scene scene, double begX, double begY, double begZ, double endX, double endY, double endZ,
+
+                   int countVoxelX, int countVoxelY, int countVoxelZ) {
         this.scene = scene;
+        this.begX = begX;
+        this.begY = begY;
+        this.begZ = begZ;
+        this.endX = endX;
+        this.endY = endY;
+        this.endZ = endZ;
+        this.cellSizeX = (endX-begX)/countVoxelX;
+        this.cellSizeY = (endY-begY)/countVoxelY;
+        this.cellSizeZ = (endZ-begZ)/countVoxelZ;
+        this.countVoxelX = countVoxelX;
+        this.countVoxelY = countVoxelY;
+        this.countVoxelZ = countVoxelZ;
+        InitializeVoxel();
     }
+
     public void InitializeVoxel(){
         List<Geometry>  list= scene.geometries.FindAllGeometries();
         for (Geometry geometry:list)
@@ -47,20 +76,32 @@ public class Voxeles {
         int Y= (int) ((startPoint.getY()-begY)/cellSizeY);
         int Z= (int) ((startPoint.getZ()-begZ)/cellSizeZ);
 
-        int stepX= ray.getDir().getHead().getX()>0 ? 1:-1;
-        int stepY= ray.getDir().getHead().getY()>0 ? 1:-1;
-        int stepZ= ray.getDir().getHead().getZ()>0 ? 1:-1;
-
-
-        double tDeltaX=0;//???????????????
-        if(ray.getDir().getHead().getX() !=0)
+        int stepX=0,stepY=0,stepZ=0;
+        double tDeltaX=0, tDeltaY=0,tDeltaZ=0,tMaxX,tMaxY,tMaxZ;
+        if(ray.getDir().getHead().getX() !=0){
+            stepX= ray.getDir().getHead().getX()>0 ? 1:-1;
             tDeltaX=stepX* cellSizeX/ (ray.getDir().getHead().getX());
-        double tDeltaY=stepY* cellSizeY/ (ray.getDir().getHead().getY());
-        double tDeltaZ=stepZ* cellSizeZ/ (ray.getDir().getHead().getZ());
+            tMaxX= stepX*(((X+(stepX==1? 1:0))* cellSizeX  + begX)-startPoint.getX())/tDeltaX;
+        }
+        else
+            tMaxX=Double.POSITIVE_INFINITY;
 
-        double tMaxX= stepX*(((X+(stepX==1? 1:0))* cellSizeX  + begX)-startPoint.getX())/tDeltaX;
-        double tMaxY= stepY*(((Y+(stepY==1? 1:0))* cellSizeY  + begY)-startPoint.getY())/tDeltaY;
-        double tMaxZ= stepZ*(((Z+(stepZ==1? 1:0))* cellSizeZ  + begZ)-startPoint.getZ())/tDeltaZ;
+        if(ray.getDir().getHead().getY() !=0){
+            stepY= ray.getDir().getHead().getY()>0 ? 1:-1;
+            tDeltaY=stepY* cellSizeY/ (ray.getDir().getHead().getY());
+            tMaxY= stepY*(((Y+(stepY==1? 1:0))* cellSizeY  + begY)-startPoint.getY())/tDeltaY;
+        }
+        else
+            tMaxY=Double.POSITIVE_INFINITY;
+
+        if(ray.getDir().getHead().getZ() !=0) {
+            stepZ= ray.getDir().getHead().getZ()>0 ? 1:-1;
+            tDeltaZ=stepZ* cellSizeZ/ (ray.getDir().getHead().getZ());
+            tMaxZ= stepZ*(((Z+(stepZ==1? 1:0))* cellSizeZ  + begZ)-startPoint.getZ())/tDeltaZ;
+        }
+        else
+            tMaxZ=Double.POSITIVE_INFINITY;
+
 
 
         List<GeoPoint> retList=null;
