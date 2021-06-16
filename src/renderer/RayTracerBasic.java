@@ -57,7 +57,7 @@ public class RayTracerBasic extends RayTracerBase{
         Vector lightDirection= l.scale(-1); // from point to light source
         Ray lightRay= new Ray(geopoint.point, lightDirection, n);
         double lightDistance= light.getDistance(geopoint.point);
-        var intersections = scene.geometries.findGeoIntersections(lightRay);
+        var intersections = voxeles.findGeoIntersections(lightRay,true);
         if (intersections == null) return 1.0;
         double ktr= 1.0;
         for (GeoPoint gp: intersections) {
@@ -73,18 +73,7 @@ public class RayTracerBasic extends RayTracerBase{
     public Color traceRay(Ray ray) {
         List<GeoPoint> intersections;
         if(isVoxelOn()) {
-            intersections = voxeles.findGeoIntersections(ray);
-            List<GeoPoint> intersections2 =scene.geometries.findGeoIntersections(ray);
-            GeoPoint closestPoint1 = ray.getClosestGeoPoint(intersections);
-            GeoPoint closestPoint2 = ray.getClosestGeoPoint(intersections2);
-            if((closestPoint1== null && closestPoint2!=null )||(closestPoint1!= null && closestPoint2==null)||
-                    (closestPoint1!= null &&closestPoint2!=null && !closestPoint1.equals(closestPoint2))){
-                intersections = voxeles.findGeoIntersections(ray);
-
-            }
-
-
-
+            intersections = voxeles.findGeoIntersections(ray,false);
         }
         else
             intersections = scene.geometries.findGeoIntersections(ray);
@@ -225,6 +214,9 @@ public class RayTracerBasic extends RayTracerBase{
      * @return Closest Intersection
      */
     private GeoPoint findClosestIntersection(Ray ray){
+        if (isVoxelOn())
+            return ray.getClosestGeoPoint(voxeles.findGeoIntersections(ray,false));
+
         return ray.getClosestGeoPoint(scene.geometries.findGeoIntersections(ray));
     }
 

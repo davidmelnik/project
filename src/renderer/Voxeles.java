@@ -56,66 +56,93 @@ public class Voxeles {
         List<Geometry>  list= scene.geometries.FindAllGeometries();
         for (Geometry geometry:list)
         {
-            int cellMinX= (int) ((geometry.getMinX()-begX)/cellSizeX);
-            int cellMinY= (int) ((geometry.getMinY()-begY)/cellSizeY);
-            int cellMinZ= (int) ((geometry.getMinZ()-begZ)/cellSizeZ);
-            int cellMaxX= (int) ((geometry.getMaxX()-begX)/cellSizeX);
-            int cellMaxY= (int) ((geometry.getMaxY()-begY)/cellSizeY);
-            int cellMaxZ= (int) ((geometry.getMaxZ()-begZ)/cellSizeZ);
+            int cellMinX= geometry.getMinX()<begX?0: (int) Math.floor((geometry.getMinX()-begX)/cellSizeX);
+            int cellMinY= geometry.getMinY()<begY?0: (int) Math.floor((geometry.getMinY()-begY)/cellSizeY);
+            int cellMinZ= geometry.getMinZ()<begZ?0:(int) Math.floor((geometry.getMinZ()-begZ)/cellSizeZ);
+            int cellMaxX= geometry.getMaxX()>=endX ? countVoxelX-1 : (int) Math.floor((geometry.getMaxX()-begX)/cellSizeX);
+            int cellMaxY= geometry.getMaxY()>=endY ? countVoxelY-1 :(int) Math.floor((geometry.getMaxY()-begY)/cellSizeY);
+            int cellMaxZ= geometry.getMaxZ()>=endZ ? countVoxelZ-1 :(int) Math.floor((geometry.getMaxZ()-begZ)/cellSizeZ);
 
 
             for (int x = cellMinX; x <= cellMaxX; x++)
                 for (int y = cellMinY; y <= cellMaxY; y++)
                     for (int z = cellMinZ; z <= cellMaxZ; z++) {
+                        if(z==50)
+                            System.out.println();
                         if(cell[x][y][z] ==null)
                             cell[x][y][z]= new LinkedList<>();
                         cell[x][y][z].add(geometry);
                     }
         }
     }
+    private boolean pointInVoxels(Point3D point){
+        if(point.getX() >=begX && point.getX()< endX
+                &&point.getY()>=begY && point.getY()< endY
+                && point.getZ()>= begZ && point.getZ()<endZ)
+            return true;
+        return false;
+
+    }
 
     private Point3D findStartPoint(Ray ray){
         Point3D point =ray.getP0();
         //if ray in voxel
-        if(point.getX() >=begX && point.getX()< endX
-        &&point.getY()>=begY && point.getY()< endY
-        && point.getZ()>= begZ && point.getZ()<endZ)
+        if(pointInVoxels( point))
             return point;
 
-        double min_t=Double.POSITIVE_INFINITY,current;
+        //if the point is on the end border it will be out of the voxel,
+        //and therefore we decreased the end border by DELTA
+        final double  DELTA=0.0001;
         if(!isZero(ray.getDir().getHead().getX())) {
-            current = (begX - point.getX()) / ray.getDir().getHead().getX();
-            if (current > 0 && current < min_t)
-                min_t = current;
-            current = (endX - point.getX()) / ray.getDir().getHead().getX();
-            if (current > 0 && current < min_t)
-                min_t = current;
+            Point3D xPoint;
+            double border = (ray.getDir().getHead().getX() > 0) ? begX : endX-DELTA;
+            double currentT = (border - point.getX())/ray.getDir().getHead().getX();
+            if (currentT > 0) {
+                xPoint = ray.getPoint(currentT);
+                if (pointInVoxels(xPoint))
+                    return xPoint;
+            }
         }
 
         if(!isZero(ray.getDir().getHead().getY())) {
-            current = (begY - point.getY()) / ray.getDir().getHead().getY();
-            if (current > 0 && current < min_t)
-                min_t = current;
-            current = (endY - point.getY()) / ray.getDir().getHead().getY();
-            if (current > 0 && current < min_t)
-                min_t = current;
+            Point3D yPoint;
+            double border = (ray.getDir().getHead().getY() > 0) ? begY : endY-DELTA;
+            double currentT = (border - point.getY())/ray.getDir().getHead().getY();
+            if (currentT > 0) {
+                yPoint = ray.getPoint(currentT);
+                if (pointInVoxels(yPoint))
+                    return yPoint;
+            }
         }
 
         if(!isZero(ray.getDir().getHead().getZ())) {
-            current = (begZ - point.getZ()) / ray.getDir().getHead().getZ();
-            if (current > 0 && current < min_t)
-                min_t = current;
-            current = (endZ - point.getZ()) / ray.getDir().getHead().getZ();
-            if (current > 0 && current < min_t)
-                min_t = current;
+            Point3D zPoint;
+            double border = (ray.getDir().getHead().getZ() > 0) ? begZ : endZ-DELTA;
+            double currentT = (border - point.getZ())/ray.getDir().getHead().getZ();
+            if (currentT > 0) {
+                zPoint = ray.getPoint(currentT);
+                if (pointInVoxels(zPoint))
+                    return zPoint;
+            }
         }
-        return ray.getPoint(min_t);
+
+
+
+        return null;
 
     }
 
-    public List<GeoPoint> findGeoIntersections(Ray ray){
+    /**
+     *
+     * @param ray
+     * @param findAll
+     * @return
+     */
+    public List<GeoPoint> findGeoIntersections(Ray ray, boolean findAll){
 
         Point3D startPoint= findStartPoint(ray);
+        if (startPoint==null)
+            return null;
         int X= (int) ((startPoint.getX()-begX)/cellSizeX);
         int Y= (int) ((startPoint.getY()-begY)/cellSizeY);
         int Z= (int) ((startPoint.getZ()-begZ)/cellSizeZ);
@@ -125,7 +152,7 @@ public class Voxeles {
         if(ray.getDir().getHead().getX() !=0){
             stepX= ray.getDir().getHead().getX()>0 ? 1:-1;
             tDeltaX=stepX* cellSizeX/ (ray.getDir().getHead().getX());
-            tMaxX= stepX*(((X+(stepX==1? 1:0))* cellSizeX  + begX)-startPoint.getX())/tDeltaX;
+            tMaxX= (((X+(stepX==1? 1:0))* cellSizeX  + begX)-startPoint.getX())/ray.getDir().getHead().getX();
         }
         else
             tMaxX=Double.POSITIVE_INFINITY;
@@ -133,7 +160,7 @@ public class Voxeles {
         if(ray.getDir().getHead().getY() !=0){
             stepY= ray.getDir().getHead().getY()>0 ? 1:-1;
             tDeltaY=stepY* cellSizeY/ (ray.getDir().getHead().getY());
-            tMaxY= stepY*(((Y+(stepY==1? 1:0))* cellSizeY  + begY)-startPoint.getY())/tDeltaY;
+            tMaxY= (((Y+(stepY==1? 1:0))* cellSizeY  + begY)-startPoint.getY())/ray.getDir().getHead().getY();
         }
         else
             tMaxY=Double.POSITIVE_INFINITY;
@@ -141,7 +168,7 @@ public class Voxeles {
         if(ray.getDir().getHead().getZ() !=0) {
             stepZ= ray.getDir().getHead().getZ()>0 ? 1:-1;
             tDeltaZ=stepZ* cellSizeZ/ (ray.getDir().getHead().getZ());
-            tMaxZ= stepZ*(((Z+(stepZ==1? 1:0))* cellSizeZ  + begZ)-startPoint.getZ())/tDeltaZ;
+            tMaxZ= (((Z+(stepZ==1? 1:0))* cellSizeZ  + begZ)-startPoint.getZ())/ray.getDir().getHead().getZ();
         }
         else
             tMaxZ=Double.POSITIVE_INFINITY;
@@ -149,7 +176,9 @@ public class Voxeles {
 
 
         List<GeoPoint> retList=null;
-        do {
+        if(cell[X][Y][Z] !=null)
+            retList= findGeoInVoxel(ray,X,Y,Z);
+        while (findAll || retList == null){
                 if (tMaxX < tMaxY) {
                     if (tMaxX < tMaxZ) {
                         X = X + stepX;
@@ -175,9 +204,16 @@ public class Voxeles {
                         tMaxZ = tMaxZ + tDeltaZ;
                     }
                 }
-                if(cell[X][Y][Z] !=null)
-                    retList= findGeoInVoxel(ray,X,Y,Z);
-            } while (retList == null);
+                if(cell[X][Y][Z] !=null) {
+                    List<GeoPoint> geoPointList=findGeoInVoxel(ray, X, Y, Z);
+                    if (geoPointList!=null) {
+                        if (retList == null)
+                            retList = geoPointList;
+                        else
+                            retList.addAll(findGeoInVoxel(ray, X, Y, Z));
+                    }
+                }
+            }
 
         return retList;
 

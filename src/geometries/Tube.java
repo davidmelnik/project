@@ -6,6 +6,8 @@ import primitives.*;
 import java.util.LinkedList;
 import java.util.List;
 
+import static primitives.Util.isZero;
+
 public class Tube extends Geometry {
     protected Ray axisRay;
     protected double radius;
@@ -18,6 +20,23 @@ public class Tube extends Geometry {
     public Tube(Ray axisRay, double radius) {
         this.axisRay = axisRay;
         this.radius = radius;
+
+        minX=minY=minZ=Double.NEGATIVE_INFINITY;
+        maxX=maxY=maxZ=Double.POSITIVE_INFINITY;
+
+        if (isZero(axisRay.getDir().getHead().getX())) {
+            minX = axisRay.getP0().getX() - radius;
+            maxX = axisRay.getP0().getX() + radius;
+        }
+        if (isZero(axisRay.getDir().getHead().getY())) {
+            minY = axisRay.getP0().getY() - radius;
+            maxY = axisRay.getP0().getY() + radius;
+        }
+        if (isZero(axisRay.getDir().getHead().getZ())) {
+            minZ = axisRay.getP0().getZ() - radius;
+            maxZ = axisRay.getP0().getZ() + radius;
+        }
+
     }
 
     public Ray getAxisRay() {

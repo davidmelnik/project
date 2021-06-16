@@ -7,6 +7,8 @@ import primitives.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
+import static primitives.Util.isZero;
+
 public class Plane extends Geometry {
     private Point3D q0;
     private Vector normal;
@@ -19,6 +21,18 @@ public class Plane extends Geometry {
     public Plane(Point3D q0, Vector normal) {
         this.q0 = q0;
         this.normal = normal;
+
+        minX=minY=minZ=Double.NEGATIVE_INFINITY;
+        maxX=maxY=maxZ=Double.POSITIVE_INFINITY;
+
+        if (isZero(normal.getHead().getX()))
+            minX=maxX=q0.getX();
+
+        if (isZero(normal.getHead().getY()))
+            minY=maxX=q0.getY();
+
+        if (isZero(normal.getHead().getZ()))
+            minZ=maxZ=q0.getZ();
     }
 
     /**

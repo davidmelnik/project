@@ -9,6 +9,7 @@ import primitives.*;
 import renderer.ImageWriter;
 import renderer.RayTracerBasic;
 import renderer.Render;
+import renderer.Voxeles;
 import scene.Scene;
 
 import static org.junit.Assert.*;
@@ -139,11 +140,12 @@ public class BeamTests {
                 .setKl(0.00004).setKq(0.0000006));
         scene.lights.add(new DirectionalLight(new Color(java.awt.Color.orange),new Vector(0,-1,-1)));
 
+        Voxeles voxeles= new Voxeles(scene,-150,-150,-150,150,150,150,50,50,50);
         ImageWriter imageWriter = new ImageWriter("NotGlossyImage", 600, 600);
         Render render = new Render() //
                 .setImageWriter(imageWriter) //
                 .setCamera(camera) //
-                .setRayTracer(new RayTracerBasic(scene))
+                .setRayTracer(new RayTracerBasic(scene).setVoxeles(voxeles).setVoxelOn(true))
                 .setMultithreading(3);
 
         render.renderImage();

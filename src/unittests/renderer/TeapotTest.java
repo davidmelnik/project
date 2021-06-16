@@ -1557,11 +1557,12 @@ public class TeapotTest {
 		scene.lights.add(new PointLight(new Color(500, 500, 500), new Point3D(100, 0, -100)) //
 				.setKq(0.000001));
 
+		Voxeles voxeles= new Voxeles(scene,-100,-100,-200,150,150,100,50,50,50);
 		ImageWriter imageWriter = new ImageWriter("teapot", 800, 800);
 		Render render = new Render() //
 				.setCamera(camera) //
 				.setImageWriter(imageWriter) //
-				.setRayTracer(new RayTracerBasic(scene)) //
+				.setRayTracer(new RayTracerBasic(scene).setVoxeles(voxeles).setVoxelOn(true)) //
 				.setMultithreading(3).setDebugPrint();
 		render.renderImage();
 		render.printGrid(50, new Color(java.awt.Color.YELLOW));

@@ -7,6 +7,7 @@ import primitives.*;
 import renderer.ImageWriter;
 import renderer.RayTracerBasic;
 import renderer.Render;
+import renderer.Voxeles;
 import scene.Scene;
 
 public class project1 {
@@ -86,11 +87,12 @@ public class project1 {
         scene.lights.add(new PointLight(new Color (java.awt.Color.green), new Point3D(5,250,350))
                 .setKl(0.000004).setKq(0.00000006));
 
+        Voxeles voxeles= new Voxeles(scene,-0.1,-0.1,-0.1,300,300,360,50,50,50);
         ImageWriter imageWriter = new ImageWriter("project1", 600, 600);
         Render render = new Render() //
                 .setImageWriter(imageWriter) //
                 .setCamera(camera) //
-                .setRayTracer(new RayTracerBasic(scene))
+                .setRayTracer(new RayTracerBasic(scene).setVoxeles(voxeles).setVoxelOn(true))
                 .setMultithreading(3);
 
         render.renderImage();
