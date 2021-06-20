@@ -1,6 +1,9 @@
 package renderer;
 
 import elements.LightSource;
+import elements.PointLight;
+import elements.SpotLight;
+import geometries.Plane;
 import primitives.*;
 import scene.Scene;
 import geometries.Intersectable.GeoPoint;
@@ -54,10 +57,26 @@ public class RayTracerBasic extends RayTracerBase{
      * @return level of light passing through
      */
     private double transparency(LightSource light, Vector l, Vector n, GeoPoint geopoint) {
+
         Vector lightDirection= l.scale(-1); // from point to light source
         Ray lightRay= new Ray(geopoint.point, lightDirection, n);
         double lightDistance= light.getDistance(geopoint.point);
-        var intersections = voxeles.findGeoIntersections(lightRay,true);
+        List<GeoPoint> intersections/*=scene.geometries.findGeoIntersections(lightRay)*/;
+      //  GeoPoint temp=ray.getClosestGeoPoint(intersections);
+       // if (intersections!=null && !(intersections.get(0).geometry instanceof Plane))
+         //   System.out.println();
+        if(isVoxelOn()) {
+
+            intersections = voxeles.findGeoIntersections(lightRay, true);
+            /*if (intersections==null)
+                System.out.println();
+            intersections=scene.geometries.findGeoIntersections(lightRay);
+            intersections = voxeles.findGeoIntersections(lightRay, true);*/
+        }
+        else
+            intersections=scene.geometries.findGeoIntersections(lightRay);
+
+
         if (intersections == null) return 1.0;
         double ktr= 1.0;
         for (GeoPoint gp: intersections) {
@@ -249,7 +268,7 @@ public class RayTracerBasic extends RayTracerBase{
                 // first add effects values and then scale the color in order to save scaling time
                 color = color.add(lightIntensity.scale(
                         calcDiffusive(kd, nl) +
-                                calcSpecular(ks, l, n, v, nShininess, nl)));
+                        calcSpecular(ks, l, n, v, nShininess, nl)));
             }
             }
         }

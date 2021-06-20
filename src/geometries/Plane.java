@@ -25,13 +25,13 @@ public class Plane extends Geometry {
         minX=minY=minZ=Double.NEGATIVE_INFINITY;
         maxX=maxY=maxZ=Double.POSITIVE_INFINITY;
 
-        if (isZero(normal.getHead().getX()))
+        if (normal.getHead().getX()==1)
             minX=maxX=q0.getX();
 
-        if (isZero(normal.getHead().getY()))
-            minY=maxX=q0.getY();
+        if (normal.getHead().getY()==1)
+            minY=maxY=q0.getY();
 
-        if (isZero(normal.getHead().getZ()))
+        if (normal.getHead().getZ()==1)
             minZ=maxZ=q0.getZ();
     }
 

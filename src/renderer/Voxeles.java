@@ -1,6 +1,7 @@
 package renderer;
 
 import geometries.Geometry;
+import geometries.Intersectable;
 import geometries.Intersectable.*;
 import primitives.Point3D;
 import primitives.Ray;
@@ -176,41 +177,48 @@ public class Voxeles {
 
 
         List<GeoPoint> retList=null;
-        if(cell[X][Y][Z] !=null)
-            retList= findGeoInVoxel(ray,X,Y,Z);
+        if(cell[X][Y][Z] !=null) {
+            List<GeoPoint> geoPointList=findGeoInVoxel(ray, X, Y, Z,findAll);
+            if (geoPointList!=null) {
+                if (retList == null)
+                    retList = geoPointList;
+                else
+                    retList.addAll(geoPointList);
+            }
+        }
         while (findAll || retList == null){
                 if (tMaxX < tMaxY) {
                     if (tMaxX < tMaxZ) {
                         X = X + stepX;
                         if (X< 0 || X>=countVoxelX)
-                            return null; /* outside grid */
+                           break; /* outside grid */
                         tMaxX = tMaxX + tDeltaX;
                     } else {
                         Z = Z + stepZ;
                         if (Z< 0 || Z>=countVoxelZ)
-                            return null;
+                            break;
                         tMaxZ = tMaxZ + tDeltaZ;
                     }
                 } else {
                     if (tMaxY < tMaxZ) {
                         Y = Y + stepY;
                         if (Y< 0 || Y>=countVoxelY)
-                            return null;
+                            break;
                         tMaxY = tMaxY + tDeltaY;
                     } else {
                         Z = Z + stepZ;
                         if (Z< 0 || Z>=countVoxelZ)
-                            return null;
+                            break;
                         tMaxZ = tMaxZ + tDeltaZ;
                     }
                 }
                 if(cell[X][Y][Z] !=null) {
-                    List<GeoPoint> geoPointList=findGeoInVoxel(ray, X, Y, Z);
+                    List<GeoPoint> geoPointList=findGeoInVoxel(ray, X, Y, Z,findAll);
                     if (geoPointList!=null) {
                         if (retList == null)
                             retList = geoPointList;
                         else
-                            retList.addAll(findGeoInVoxel(ray, X, Y, Z));
+                            retList.addAll(geoPointList);
                     }
                 }
             }
@@ -230,22 +238,20 @@ public class Voxeles {
      * @return list contain all the geopoint in this voxel, if not geopoint return null
      * we assume that list in voxel isn't null
      */
-    private List<GeoPoint> findGeoInVoxel(Ray ray, int X,int Y, int Z){
-        List<GeoPoint> retList = new LinkedList();
+    private List<GeoPoint> findGeoInVoxel(Ray ray, int X,int Y, int Z, boolean findAll){
+       List<GeoPoint> retList = new LinkedList();
         List<Geometry> list =cell[X][Y][Z];
         double startX= begX +X*cellSizeX;
         double startY= begY +Y*cellSizeY;
         double startZ= begZ +Z*cellSizeZ;
-        for (Geometry geometry: list
-             ) {
+        for (Geometry geometry: list) {
             List<GeoPoint> listGeom=geometry.findGeoIntersections(ray);
-            if(listGeom !=null) {
-                for (GeoPoint geoPoint : listGeom
-                ) {
+            if(listGeom !=null &&!listGeom.isEmpty()) {
+                for (GeoPoint geoPoint : listGeom) {
                     Point3D point= geoPoint.point;
-                    if(point.getX()>=startX  &&point.getX()<= startX+cellSizeX
-                    &&point.getY()>= startY && point.getY()<=startY+cellSizeY
-                    &&point.getZ()>=startZ && point.getZ()<=startZ+cellSizeZ)
+                    if(point.getX()>=startX  &&point.getX()< startX+cellSizeX
+                    &&point.getY()>= startY && point.getY()<startY+cellSizeY
+                    &&point.getZ()>=startZ && point.getZ()<startZ+cellSizeZ)
                         retList.add(geoPoint);
                 }
             }
@@ -254,6 +260,26 @@ public class Voxeles {
         if (retList.isEmpty())
             return null;
         return retList;
+
+/*
+        List<GeoPoint> points =new LinkedList();
+        for (Intersectable item:cell[X][Y][Z])
+        {
+            List<GeoPoint> lst= item.findGeoIntersections(ray);
+            if(lst!=null && !lst.isEmpty()) {
+                if (findAll==true)
+                    System.out.println();
+                /*Point3D point= geoPoint.point;
+                if(point.getX()>=startX  &&point.getX()<= startX+cellSizeX
+                        &&point.getY()>= startY && point.getY()<=startY+cellSizeY
+                        &&point.getZ()>=startZ && point.getZ()<=startZ+cellSizeZ)
+                    retList.add(geoPoint);
+                points.addAll(lst);
+            }
+        }
+        if (points.isEmpty())
+            return null;
+        return points;*/
     }
 
 
