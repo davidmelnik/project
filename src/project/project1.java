@@ -161,8 +161,8 @@ public class project1 {
         scene.lights.add(new PointLight(new Color (java.awt.Color.green), new Point3D(5,250,350))
                 .setKl(0.04).setKq(0.006));
 
-        Ray.setNumberRays(10);
-        Voxeles voxeles= new Voxeles(scene,0,0,0,500,500,400,7,7,5);
+        Ray.setNumberRays(50);
+        Voxeles voxeles= new Voxeles(scene,0,0,0,500,500,400,100,100,100);
         ImageWriter imageWriter = new ImageWriter("project1", 600, 600);
         Render render = new Render() //
                 .setImageWriter(imageWriter) //

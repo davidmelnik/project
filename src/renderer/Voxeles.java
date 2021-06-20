@@ -52,6 +52,9 @@ public class Voxeles {
         InitializeVoxel();
     }
 
+    /**
+     * initialize voxel with geometries in the scene
+     */
     public void InitializeVoxel(){
         cell= new LinkedList[countVoxelX][countVoxelY][countVoxelZ];
         List<Geometry>  list= scene.geometries.FindAllGeometries();
@@ -76,6 +79,12 @@ public class Voxeles {
                     }
         }
     }
+
+    /**
+     * test if point is in the voxel
+     * @param point
+     * @return true if point is in the voxel
+     */
     private boolean pointInVoxels(Point3D point){
         if(point.getX() >=begX && point.getX()< endX
                 &&point.getY()>=begY && point.getY()< endY
@@ -85,15 +94,23 @@ public class Voxeles {
 
     }
 
+    /**
+     *
+     * @param ray
+     * @return ray start point in voxels grid
+     */
     private Point3D findStartPoint(Ray ray){
         Point3D point =ray.getP0();
-        //if ray in voxel
+
+        //if ray in voxel start from our point
         if(pointInVoxels( point))
             return point;
 
         //if the point is on the end border it will be out of the voxel,
         //and therefore we decreased the end border by DELTA
         final double  DELTA=0.0001;
+
+        //test if the start point is on the X border
         if(!isZero(ray.getDir().getHead().getX())) {
             Point3D xPoint;
             double border = (ray.getDir().getHead().getX() > 0) ? begX : endX-DELTA;
@@ -105,6 +122,7 @@ public class Voxeles {
             }
         }
 
+        //test if the start point is on the Y border
         if(!isZero(ray.getDir().getHead().getY())) {
             Point3D yPoint;
             double border = (ray.getDir().getHead().getY() > 0) ? begY : endY-DELTA;
@@ -116,6 +134,7 @@ public class Voxeles {
             }
         }
 
+        //test if the start point is on the Z border
         if(!isZero(ray.getDir().getHead().getZ())) {
             Point3D zPoint;
             double border = (ray.getDir().getHead().getZ() > 0) ? begZ : endZ-DELTA;
@@ -127,34 +146,43 @@ public class Voxeles {
             }
         }
 
-
-
+        //if there is no intersection return null
         return null;
 
     }
 
     /**
-     *
+     * find intersection of ray and geometries using grid of voxels
      * @param ray
-     * @param findAll
-     * @return
+     * @param findAll if we want all intersections findAll should be True,
+     *                but if we wnt only the closest intersection findAll should be False
+     * @return ray intersections
      */
     public List<GeoPoint> findGeoIntersections(Ray ray, boolean findAll){
 
         Point3D startPoint= findStartPoint(ray);
         if (startPoint==null)
             return null;
+
+        //start point for each direction
         int X= (int) ((startPoint.getX()-begX)/cellSizeX);
         int Y= (int) ((startPoint.getY()-begY)/cellSizeY);
         int Z= (int) ((startPoint.getZ()-begZ)/cellSizeZ);
 
+        //step determines whether the vector factors are positive or negative
         int stepX=0,stepY=0,stepZ=0;
+
+        //Delta is the distance by t values to the closest border of the voxel
+        //Max is the the distance by t values from the beginning of the voxel to the end
         double tDeltaX=0, tDeltaY=0,tDeltaZ=0,tMaxX,tMaxY,tMaxZ;
+
+
         if(ray.getDir().getHead().getX() !=0){
             stepX= ray.getDir().getHead().getX()>0 ? 1:-1;
             tDeltaX=stepX* cellSizeX/ (ray.getDir().getHead().getX());
             tMaxX= (((X+(stepX==1? 1:0))* cellSizeX  + begX)-startPoint.getX())/ray.getDir().getHead().getX();
         }
+        //if there is no X value in vector we will never reach the X border
         else
             tMaxX=Double.POSITIVE_INFINITY;
 
@@ -163,6 +191,7 @@ public class Voxeles {
             tDeltaY=stepY* cellSizeY/ (ray.getDir().getHead().getY());
             tMaxY= (((Y+(stepY==1? 1:0))* cellSizeY  + begY)-startPoint.getY())/ray.getDir().getHead().getY();
         }
+        //if there is no Y value in vector we will never reach the Y border
         else
             tMaxY=Double.POSITIVE_INFINITY;
 
@@ -171,12 +200,15 @@ public class Voxeles {
             tDeltaZ=stepZ* cellSizeZ/ (ray.getDir().getHead().getZ());
             tMaxZ= (((Z+(stepZ==1? 1:0))* cellSizeZ  + begZ)-startPoint.getZ())/ray.getDir().getHead().getZ();
         }
+        //if there is no Z value in vector we will never reach the Z border
         else
             tMaxZ=Double.POSITIVE_INFINITY;
 
 
-
+        //list of intersections
         List<GeoPoint> retList=null;
+
+        //if there are geometries in the voxel add the intersections to retList
         if(cell[X][Y][Z] !=null) {
             List<GeoPoint> geoPointList=findGeoInVoxel(ray, X, Y, Z,findAll);
             if (geoPointList!=null) {
@@ -186,6 +218,8 @@ public class Voxeles {
                     retList.addAll(geoPointList);
             }
         }
+
+        //continue going over all the voxels until you find an intersection
         while (findAll || retList == null){
                 if (tMaxX < tMaxY) {
                     if (tMaxX < tMaxZ) {
@@ -261,25 +295,7 @@ public class Voxeles {
             return null;
         return retList;
 
-/*
-        List<GeoPoint> points =new LinkedList();
-        for (Intersectable item:cell[X][Y][Z])
-        {
-            List<GeoPoint> lst= item.findGeoIntersections(ray);
-            if(lst!=null && !lst.isEmpty()) {
-                if (findAll==true)
-                    System.out.println();
-                /*Point3D point= geoPoint.point;
-                if(point.getX()>=startX  &&point.getX()<= startX+cellSizeX
-                        &&point.getY()>= startY && point.getY()<=startY+cellSizeY
-                        &&point.getZ()>=startZ && point.getZ()<=startZ+cellSizeZ)
-                    retList.add(geoPoint);
-                points.addAll(lst);
-            }
-        }
-        if (points.isEmpty())
-            return null;
-        return points;*/
+
     }
 
 
