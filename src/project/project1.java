@@ -66,9 +66,10 @@ public class project1 {
 
 
         //tables
+        final int INTERVAL_BETWEEN_TABLE=160;
         int i,j;
-        for(i=0; i<500;i+=160){
-            for (j=0; j<500;j+=160) {
+        for(i=0; i<500;i+=INTERVAL_BETWEEN_TABLE){
+            for (j=0; j<500;j+=INTERVAL_BETWEEN_TABLE) {
                 int interval=20;
                 //points for table surface
                 Point3D p1 = new Point3D(50 + i, 50 + j, 50);
@@ -162,7 +163,7 @@ public class project1 {
 
         Ray.setNumberRays(50);
         Voxeles voxeles= new Voxeles(scene,0,0,0,650,650,400,90,90,90);
-        ImageWriter imageWriter = new ImageWriter("project1", 600, 600);
+        ImageWriter imageWriter = new ImageWriter("project1", 1000, 1000);
         Render render = new Render() //
                 .setImageWriter(imageWriter) //
                 .setCamera(camera) //
