@@ -310,26 +310,5 @@ public class Render {
 	}
 
 
-	/**
-	 * Create a grid [over the picture] in the pixel color map. given the grid's
-	 * step and color.
-	 * 
-	 * @param step  grid's step
-	 * @param color grid's color
-	 */
-	/*
-	public void printGrid(int step, Color color) {
-		if (imageWriter == null)
-			throw new MissingResourceException(RESOURCE_ERROR, RENDER_CLASS, IMAGE_WRITER_COMPONENT);
-
-		int nX = imageWriter.getNx();
-		int nY = imageWriter.getNy();
-
-		for (int i = 0; i < nY; ++i)
-			for (int j = 0; j < nX; ++j)
-				if (j % step == 0 || i % step == 0)
-					imageWriter.writePixel(j, i, color);
-	}
-	*/
 
 }

@@ -167,7 +167,7 @@ public class project1 {
                 .setImageWriter(imageWriter) //
                 .setCamera(camera) //
                 .setRayTracer(new RayTracerBasic(scene).setVoxeles(voxeles).setVoxelOn(true))
-                .setMultithreading(0).setDebugPrint();
+                .setMultithreading(3).setDebugPrint();
 
         render.renderImage();
         render.writeToImage();
