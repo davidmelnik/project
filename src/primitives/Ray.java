@@ -107,8 +107,6 @@ public class Ray {
         //create a vector which is orthogonal to the given ray and the new vector
         xVector=this.getDir().crossProduct(yVector).normalized();
 
-
-
         Random random = new Random();
         LinkedList<Ray> list = new LinkedList();
         list.add(this);
@@ -117,6 +115,7 @@ public class Ray {
         // create new rays and add them to the list
         for(int i=0; i<NUMBER_RAYS-1; i++){
             do {
+                //create randomly a point in the circle around the vector head
                 double x=random.nextDouble()*2-1;
                 double y=(random.nextDouble()*2-1)*Math.sqrt(1-x*x);
                 Point3D point =center;
@@ -127,6 +126,7 @@ public class Ray {
                 newVector=point.subtract(this.getP0()).normalize();
                 double test= newVector.dotProduct(normal);
 
+                //if new vector is in the wrong direction to the surface, use a different vector
             } while(newVector.dotProduct(normal)<=0);
 
 
@@ -162,11 +162,12 @@ public class Ray {
     }
 
     public Point3D getPoint(double t){
-        //if (Util.isZero(t))
-        //    return this.p0;
+
        try {
            return this.p0.add(this.dir.scale(t));
-       } catch (Exception e) {
+       }
+       //if the vector is a zero vector, return p0
+       catch (Exception e) {
            return this.p0;
        }
     }

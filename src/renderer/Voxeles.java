@@ -53,7 +53,7 @@ public class Voxeles {
     }
 
     /**
-     * initialize voxel with geometries in the scene
+     * initialize voxel with geometries in the scene by creating an AABB around the geometry
      */
     public void InitializeVoxel(){
         cell= new LinkedList[countVoxelX][countVoxelY][countVoxelZ];
@@ -172,8 +172,8 @@ public class Voxeles {
         //step determines whether the vector factors are positive or negative
         int stepX=0,stepY=0,stepZ=0;
 
-        //Delta is the distance by t values to the closest border of the voxel
-        //Max is the the distance by t values from the beginning of the voxel to the end
+        //Max is the distance by t values to the closest border of the voxel
+        //Delta is the the distance by t values from the beginning of the voxel to the end
         double tDeltaX=0, tDeltaY=0,tDeltaZ=0,tMaxX,tMaxY,tMaxZ;
 
 
@@ -269,7 +269,7 @@ public class Voxeles {
      * @param X
      * @param Y
      * @param Z
-     * @return list contain all the geopoint in this voxel, if not geopoint return null
+     * @return list contain all the geoPoint in this voxel, if not geoPoint return null
      * we assume that list in voxel isn't null
      */
     private List<GeoPoint> findGeoInVoxel(Ray ray, int X,int Y, int Z, boolean findAll){
