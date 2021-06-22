@@ -52,11 +52,11 @@ public class project1 {
                 new Polygon(new Point3D(200,1,100),new Point3D(250,1,100),//glossy mirror
                         new Point3D(250,1,250),new Point3D(200,1,250))//
                         .setEmission(new Color(java.awt.Color.DARK_GRAY))
-                        .setMaterial(new Material().setKd(0.25).setKs(0.25).setShininess(20).setKt(0).setKr(0.7).setKg(0.9)),
+                        .setMaterial(new Material().setKd(0.25).setKs(0.25).setShininess(20).setKt(0).setKr(0.7).setKg(0.8)),
                 new Polygon(new Point3D(300,1,100),new Point3D(350,1,100),//glossy mirror
                         new Point3D(350,1,250),new Point3D(300,1,250))//
                         .setEmission(new Color(java.awt.Color.DARK_GRAY))
-                        .setMaterial(new Material().setKd(0.25).setKs(0.25).setShininess(20).setKt(0).setKr(0.7).setKg(0.9)),
+                        .setMaterial(new Material().setKd(0.25).setKs(0.25).setShininess(20).setKt(0).setKr(0.7).setKg(0.7)),
 
                  new Sphere(new Point3D(-9,250,350),18)//light bulb
                         .setEmission(new Color(java.awt.Color.DARK_GRAY)) //
